@@ -7,7 +7,6 @@ use Illuminate\Support\ServiceProvider;
 
 class JobWatcherServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         $this->app->bind('job-watcher', function ($app) {

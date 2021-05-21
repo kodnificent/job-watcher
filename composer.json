@@ -20,12 +20,14 @@
         }
     },
     "require": {
-        "illuminate/support": "^8.0"
+        "illuminate/support": "^8.0",
+        "laravel/lumen-framework": "^8.2"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",
         "phpunit/phpunit": "^9.5",
-        "nunomaduro/collision": "^5.3"
+        "nunomaduro/collision": "^5.3",
+        "anik/testbench-lumen": "^1.1"
     },
     "extra": {
         "laravel":  {

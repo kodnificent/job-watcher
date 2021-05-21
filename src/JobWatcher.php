@@ -2,6 +2,9 @@
 
 namespace Kodnificent\JobWatcher;
 
+use Illuminate\Foundation\Application as LaravelApplication;
+use Laravel\Lumen\Application as LumenApplication;
+
 class JobWatcher
 {
     /**
@@ -12,6 +15,16 @@ class JobWatcher
     public function __construct($app)
     {
         $this->app = $app;
+    }
+
+    public function isLumenApp()
+    {
+        return $this->app instanceof LumenApplication;
+    }
+
+    public function isLaravelApp()
+    {
+        return $this->app instanceof LaravelApplication;
     }
 
     /**

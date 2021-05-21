@@ -2,9 +2,9 @@
 
 namespace Kodnificent\JobWatcher\Tests\Unit;
 
-use Kodnificent\JobWatcher\Tests\TestCase;
+use Kodnificent\JobWatcher\Tests\LaravelTestCase;
 
-class ExampleTest extends TestCase
+class ExampleTest extends LaravelTestCase
 {
     public function testExample()
     {

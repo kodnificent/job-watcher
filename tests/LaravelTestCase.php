@@ -5,7 +5,7 @@ namespace Kodnificent\JobWatcher\Tests;
 use Kodnificent\JobWatcher\JobWatcherServiceProvider;
 use Orchestra\Testbench\TestCase as TestbenchTestCase;
 
-class TestCase extends TestbenchTestCase
+class LaravelTestCase extends TestbenchTestCase
 {
     public function setUp(): void
     {
