@@ -1,0 +1,44 @@
+{
+    "name": "kodnificent/job-watcher",
+    "description": "A laravel package that monitors the status of jobs that are processed by your queue consumers.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Victor Mbamara (Kodnificent)",
+            "email": "kodnificent@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Kodnificent\\JobWatcher\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kodnificent\\JobWatcher\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "illuminate/support": "^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.5",
+        "nunomaduro/collision": "^5.3"
+    },
+    "extra": {
+        "laravel":  {
+            "providers": [
+                "Kodnificent\\JobWatcher\\JobWatcherServiceProvider"
+            ],
+            "aliases": {
+                "JobWatcher": "Kodnificent\\JobWatcher\\Facades\\JobWatcher"
+            }
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-f": "phpunit --filter"
+    }
+}
