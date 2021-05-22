@@ -2,20 +2,17 @@
 
 namespace Kodnificent\JobWatcher\Tests;
 
-use Anik\Testbench\TestCase;
-use Kodnificent\JobWatcher\JobWatcherServiceProvider;
+use Laravel\Lumen\Testing\TestCase;
 
-class LumenTestCase extends TestCase
+abstract class LumenTestCase extends TestCase
 {
-    protected function serviceProviders(): array
+    /**
+     * Creates the application.
+     *
+     * @return \Laravel\Lumen\Application
+     */
+    public function createApplication()
     {
-        return [
-            JobWatcherServiceProvider::class,
-        ];
-    }
-
-    protected function withFacade(): bool
-    {
-        return true;
+        return require __DIR__.'/./lumen-bootstrap.php';
     }
 }
