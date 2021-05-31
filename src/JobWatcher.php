@@ -50,6 +50,8 @@ class JobWatcher
      */
     public function routeMiddlewares(): array
     {
-        return (array) $this->config('route.middlewares') ?: [];
+        $middlewares = (array) $this->config('route.middlewares') ?: [];
+
+        return array_merge(['viewJobWatcher'], $middlewares);
     }
 }
