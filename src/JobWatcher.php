@@ -3,6 +3,7 @@
 namespace Kodnificent\JobWatcher;
 
 use Illuminate\Foundation\Application as LaravelApplication;
+use Kodnificent\JobWatcher\Http\Middleware\ViewJobWatcher;
 use Laravel\Lumen\Application as LumenApplication;
 
 class JobWatcher
@@ -52,6 +53,6 @@ class JobWatcher
     {
         $middlewares = (array) $this->config('route.middlewares') ?: [];
 
-        return array_merge(['viewJobWatcher'], $middlewares);
+        return array_merge([ViewJobWatcher::class], $middlewares);
     }
 }

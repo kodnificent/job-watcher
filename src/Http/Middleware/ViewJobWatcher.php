@@ -9,7 +9,7 @@ class ViewJobWatcher
 {
     public function handle($request, Closure $next)
     {
-        if (! Gate::allows('viewJobWatcher', $request->user())) {
+        if (! Gate::allows('viewJobWatcher')) {
             abort(403);
         }
 

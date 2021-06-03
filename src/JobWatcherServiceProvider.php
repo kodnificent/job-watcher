@@ -49,14 +49,17 @@ class JobWatcherServiceProvider extends ServiceProvider
         if ($this->app->make('job-watcher')->isLumenApp()) {
             $this->app->router->group($this->routeConfig(), fn (Router $router) => require __DIR__.'/../routes/lumen-web.php');
         } else {
-            Route::group($this->routeConfig(), fn () => $this->loadRoutesFrom(__DIR__ . '/../routes/laravel-web.php'));
+            Route::middleware($this->app->make('job-watcher')->routeMiddlewares())
+            ->prefix($this->app->make('job-watcher')->routePrefix())
+            ->namespace('Kodnificent\JobWatcher\Http\Controllers')
+            ->group(fn () => $this->loadRoutesFrom(__DIR__ . '/../routes/laravel-web.php'));
         }
     }
 
     protected function routeConfig(): array
     {
         return [
-            'namespace' => 'App\Http\Controllers',
+            'namespace' => 'Kodnificent\JobWatcher\Http\Controllers',
             'prefix' => $this->app->make('job-watcher')->routePrefix(),
             'middlewares' => $this->app->make('job-watcher')->routeMiddlewares(),
         ];

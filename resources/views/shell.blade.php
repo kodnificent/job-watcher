@@ -7,6 +7,6 @@
     <title>Job Watcher</title>
   </head>
   <body>
-    <p>Hello world</p>
+    <h1>Hello from job watcher</h1>
   </body>
 </html>

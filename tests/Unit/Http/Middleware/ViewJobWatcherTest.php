@@ -12,7 +12,7 @@ class ViewJobWatcherTest extends LaravelTestCase
 {
     public function testHandleMethodShould_ThrowHttpException()
     {
-        Gate::shouldReceive('allows')->with('viewJobWatcher', null)->andReturn(false);
+        Gate::shouldReceive('allows')->with('viewJobWatcher')->andReturn(false);
 
         $this->expectException(HttpException::class);
 
@@ -23,7 +23,7 @@ class ViewJobWatcherTest extends LaravelTestCase
 
     public function testHandleMethodShouldNot_ThrowHttpException()
     {
-        Gate::shouldReceive('allows')->with('viewJobWatcher', null)->andReturn(true);
+        Gate::shouldReceive('allows')->with('viewJobWatcher')->andReturn(true);
 
         $request = new Request();
         $middleware = new ViewJobWatcher;
