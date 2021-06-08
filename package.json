@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "echo \"no test script specified\"",
+    "dev": "webpack --node-env development --watch --progress",
+    "build": "webpack --node-env production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kodnificent/job-watcher.git"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "laravel-mix": "^6.0.19",
+    "tailwindcss": "^2.1.4",
+    "vue": "^2.6.13",
+    "vue-loader": "^15.9.7",
+    "vue-router": "^3.5.1",
+    "vue-template-compiler": "^2.6.13"
+  }
+}

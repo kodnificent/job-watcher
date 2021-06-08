@@ -35,7 +35,11 @@ class JobWatcherServiceProvider extends ServiceProvider
             if ($this->app->runningInConsole()) {
                 $this->publishes([
                     __DIR__ . '/../config/config.php' => config_path('job-watcher.php')
-                ], 'config');
+                ], 'job-watcher-config');
+
+                $this->publishes([
+                    __DIR__ . '/../public' => public_path('vendor/job-watcher')
+                ], 'job-watcher-assets');
             }
         }
 
