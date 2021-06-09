@@ -3,14 +3,14 @@
 namespace Kodnificent\JobWatcher\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Gate;
+use Kodnificent\JobWatcher\Facades\Auth;
 
-class ViewJobWatcher
+class Authenticates
 {
     public function handle($request, Closure $next)
     {
-        if (! Gate::allows('viewJobWatcher')) {
-            abort(403);
+        if (Auth::isGuest()) {
+            abort(401, 'Unauthorized.');
         }
 
         return $next($request);

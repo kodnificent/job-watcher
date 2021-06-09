@@ -18,12 +18,12 @@ class JobWatcher
         $this->app = $app;
     }
 
-    public function isLumenApp()
+    public function isLumenApp(): bool
     {
         return $this->app instanceof LumenApplication;
     }
 
-    public function isLaravelApp()
+    public function isLaravelApp(): bool
     {
         return $this->app instanceof LaravelApplication;
     }
@@ -31,7 +31,7 @@ class JobWatcher
     /**
      * Get job-watcher configuration value.
      */
-    public function config($key = null, $default = null)
+    protected function config($key = null, $default = null)
     {
         $keyName = $key ? "job-watcher.$key" : 'job-watcher';
 
@@ -53,6 +53,6 @@ class JobWatcher
     {
         $middlewares = (array) $this->config('route.middlewares') ?: [];
 
-        return array_merge([ViewJobWatcher::class], $middlewares);
+        return array_merge([], $middlewares);
     }
 }

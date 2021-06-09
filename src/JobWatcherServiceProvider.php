@@ -18,6 +18,10 @@ class JobWatcherServiceProvider extends ServiceProvider
             return new JobWatcher($app);
         });
 
+        $this->app->bind('job-watcher:auth', function ($app) {
+            return new Auth($app);
+        });
+
         $this->mergeConfigFrom(__DIR__. '/../config/config.php', 'job-watcher');
     }
 
