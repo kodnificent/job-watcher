@@ -5,7 +5,7 @@ namespace Kodnificent\JobWatcher\Http\Middleware;
 use Closure;
 use Kodnificent\JobWatcher\Facades\Auth;
 
-class Authenticates
+class Authenticate
 {
     public function handle($request, Closure $next)
     {
