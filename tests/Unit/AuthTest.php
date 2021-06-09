@@ -33,7 +33,7 @@ class AuthTest extends LumenTestCase
         $client = $auth->client();
 
         $this->assertEquals($client->id, $clientId);
-        $this->assertEquals($client->name, $name);
+        $this->assertEquals($client->user, $name);
     }
 
     public function testClientMethod_WithoutAuthBearerToken_ShouldReturn_Null()
@@ -48,5 +48,24 @@ class AuthTest extends LumenTestCase
     {
         $auth = new Auth($this->app);
         $this->assertTrue($auth->isGuest());
+    }
+
+    public function testValidateMethod_ShouldReturnTrue_WithValidData()
+    {
+        $auth = new Auth($this->app);
+        $this->assertTrue($auth->validate(config('job-watcher.auth.passphrase'), 'root'));
+    }
+
+    public function testValidateMethod_ShouldReturnFalse_WithInvalidData()
+    {
+        $auth = new Auth($this->app);
+        $this->assertFalse($auth->validate('wrongPassword'), 'guest');
+    }
+
+    public function testLoginMethod_ShouldLogin_And_GenerateToken()
+    {
+        $auth = new Auth($this->app);
+        $user = $auth->login();
+        $this->assertNotNull($user->token);
     }
 }

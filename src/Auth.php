@@ -3,6 +3,7 @@
 namespace Kodnificent\JobWatcher;
 
 use Firebase\JWT\JWT;
+use Illuminate\Support\Str;
 use stdClass;
 
 class Auth
@@ -51,7 +52,7 @@ class Auth
 
         $this->client = new stdClass;
         $this->client->id = $jwt->sub;
-        $this->client->name = $jwt->user;
+        $this->client->user = $jwt->user;
         return $this->client;
     }
 
@@ -73,6 +74,29 @@ class Auth
         return (bool) $this->client() === false;
     }
 
+    /**
+     * Attempt to validate a user's credentials.
+     */
+    public function validate(string $passphrase, string $user = 'root'): bool
+    {
+        return $user === 'root' && $passphrase === $this->passphrase();
+    }
+
+    /**
+     * Creates an auth user. User ->token to get the generated token.
+     */
+    public function login(): object
+    {
+        $id = Str::random(10);
+        $user = 'root';
+        $client = new stdClass;
+        $client->user = $user;
+        $client->id = $id;
+        $client->token = $this->generateToken(['sub' => $id, 'user' => $user]);
+
+        return $this->client = $client;
+    }
+
     protected function config($key = null, $default = null)
     {
         $keyName = $key ? "job-watcher.auth.$key" : 'job-watcher.auth';
@@ -80,7 +104,12 @@ class Auth
         return config($keyName, $default);
     }
 
-    protected function decodeToken($token): object
+    protected function generateToken($payload): string
+    {
+        return JWT::encode($payload, $this->signingKey(), 'HS256');
+    }
+
+    protected function decodeToken(string $token): object
     {
         return JWT::decode($token, $this->signingKey(), ['HS256']);
     }
@@ -99,7 +128,7 @@ class Auth
         return $phrase;
     }
 
-    protected function throwException($message)
+    protected function throwException(string $message)
     {
         throw new AuthException($message);
     }
