@@ -1,6 +1,8 @@
-var h = 'safe world';
-function bladeh() {
-  return 'change 1';
-}
+import Vue from 'vue';
+import router from '@/router';
 
-bladeh();
+const app = new Vue({
+  router: router({base: '/job-watcher'}),
+});
+
+app.$mount('#app');

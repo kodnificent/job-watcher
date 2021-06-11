@@ -9,6 +9,9 @@ class LumenDashboardTest extends LumenTestCase
     public function testLumenUserCanView_DashboardPage()
     {
         $this->get(app('job-watcher')->routePrefix());
-        $this->response->assertViewIs('job-watcher::shell');
+
+        $this->response
+            ->assertSuccessful()
+            ->assertViewIs('job-watcher::shell');
     }
 }

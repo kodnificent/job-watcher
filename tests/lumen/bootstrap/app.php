@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/../../../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
@@ -20,10 +20,11 @@ date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 */
 
 $app = new Laravel\Lumen\Application(
-    dirname(__DIR__) . '/tests'
+    realpath(__DIR__ . '/../')
 );
 
 $app->instance('path.storage', $app->basePath('storage'));
+$app->instance('path.public', $app->basePath('public'));
 
 $app->withFacades();
 

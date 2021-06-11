@@ -42,7 +42,7 @@ class JobWatcherServiceProvider extends ServiceProvider
                 ], 'job-watcher-config');
 
                 $this->publishes([
-                    __DIR__ . '/../public' => public_path('vendor/job-watcher')
+                    __DIR__ . '/../public/vendor/job-watcher' => public_path('vendor/job-watcher')
                 ], 'job-watcher-assets');
             }
         }

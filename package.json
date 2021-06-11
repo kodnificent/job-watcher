@@ -11,7 +11,9 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "fs-extra": "^10.0.0",
     "laravel-mix": "^6.0.19",
+    "mini-css-extract-plugin": "^1.6.0",
     "tailwindcss": "^2.1.4",
     "vue": "^2.6.13",
     "vue-loader": "^15.9.7",
