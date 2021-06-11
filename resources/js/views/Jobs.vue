@@ -1,11 +1,13 @@
 <template>
   <div>
-    Dashboard
+    Jobs template
   </div>
 </template>
 
 <script>
 export default {
-
+  mounted() {
+    //
+  }
 }
 </script>
