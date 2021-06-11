@@ -14,11 +14,11 @@ class JobWatcherServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->bind('job-watcher', function ($app) {
+        $this->app->singleton('job-watcher', function ($app) {
             return new JobWatcher($app);
         });
 
-        $this->app->bind('job-watcher:auth', function ($app) {
+        $this->app->singleton('job-watcher:auth', function ($app) {
             return new Auth($app);
         });
 

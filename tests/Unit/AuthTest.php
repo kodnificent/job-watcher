@@ -2,41 +2,30 @@
 
 namespace Kodnificent\JobWatcher\Tests\Unit;
 
-use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Kodnificent\JobWatcher\Auth;
 use Kodnificent\JobWatcher\Tests\LumenTestCase;
 
 class AuthTest extends LumenTestCase
 {
-    public function testClientMethod_WithBearerToken_ShouldReturn_ValidClient()
+    public function testClientMethod_WithHttpCookie_ShouldReturn_ValidClient()
     {
-        $key = 'test';
-        $clientId = 'randomid';
-        $name = 'root';
-        $payload = [
-            'sub' => $clientId,
-            'user' => $name,
-        ];
-        $token = JWT::encode($payload, $key);
-        Config::set('job-watcher.auth.signing_key', $key);
+        $client = new \stdClass;
+        $client->id = 'randomid';
+        $client->username = 'root';
+        $client->login_expiry = time() + 3600;
 
-        $request = Request::create(
-            '/', 'GET', [], [], [], [
-                'HTTP_Authorization' => "Bearer $token"
-            ]
-        );
+        $request = Request::create('/', 'GET', [], ['job-watcher:auth' => encrypt($client)]);
         $this->app->bind('request', fn () => $request);
 
         $auth = new Auth($this->app);
-        $client = $auth->client();
+        $authClient = $auth->client();
 
-        $this->assertEquals($client->id, $clientId);
-        $this->assertEquals($client->user, $name);
+        $this->assertEquals($authClient->id, $client->id);
+        $this->assertEquals($authClient->username, $client->username);
     }
 
-    public function testClientMethod_WithoutAuthBearerToken_ShouldReturn_Null()
+    public function testClientMethod_WithoutHttpCookie_ShouldReturn_Null()
     {
         $auth = new Auth($this->app);
         $client = $auth->client();
@@ -62,10 +51,11 @@ class AuthTest extends LumenTestCase
         $this->assertFalse($auth->validate('wrongPassword'), 'guest');
     }
 
-    public function testLoginMethod_ShouldLogin_And_GenerateToken()
+    public function testLoginMethod_ShouldLogin_And_SetCookie()
     {
         $auth = new Auth($this->app);
-        $user = $auth->login();
-        $this->assertNotNull($user->token);
+        $auth->login();
+
+        $auth->assertCookieSet();
     }
 }
