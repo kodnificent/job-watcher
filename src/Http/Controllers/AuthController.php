@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Kodnificent\JobWatcher\Facades\Auth;
 
-class LoginController extends Controller
+class AuthController extends Controller
 {
-    public function handle(Request $request): JsonResponse
+    public function login(Request $request): JsonResponse
     {
         Validator::make($request->all(), $this->rules())->validate();
 
-        if (! Auth::validate($request->password, $request->user)) {
+        if (! Auth::validate($request->password, $request->username)) {
             throw ValidationException::withMessages([
                 'credentials' => 'Invalid credentials',
             ]);
@@ -22,11 +22,9 @@ class LoginController extends Controller
 
         $client = Auth::login();
 
-        return response()->json([
+        return new JsonResponse([
             'message' => 'Login successful.',
-            'data' => [
-                'user' => $client->username,
-            ]
+            'client' => $client,
         ]);
     }
 

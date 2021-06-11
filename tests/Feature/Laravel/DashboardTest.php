@@ -1,11 +1,11 @@
 <?php
 
-namespace Kodnificent\JobWatcher\Tests\Feature;
+namespace Kodnificent\JobWatcher\Tests\Feature\Laravel;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Kodnificent\JobWatcher\Tests\LaravelTestCase;
 
-class LaravelDashboardTest extends LaravelTestCase
+class DashboardTest extends LaravelTestCase
 {
     use WithoutMiddleware;
 

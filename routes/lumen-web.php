@@ -6,9 +6,9 @@ $router->group([
     'prefix' => 'api',
     'as' => 'api'
 ], function () use ($router) {
-    $router->get('login', [
+    $router->post('login', [
         'as' => 'login',
-        'uses' => 'LoginController@handle'
+        'uses' => 'AuthController@login'
     ]);
 });
 

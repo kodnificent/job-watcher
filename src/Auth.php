@@ -3,10 +3,10 @@
 namespace Kodnificent\JobWatcher;
 
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use Illuminate\Testing\Assert;
+use Kodnificent\JobWatcher\Exceptions\AuthException;
 use Kodnificent\JobWatcher\Facades\JobWatcher;
 use stdClass;
 
@@ -120,7 +120,7 @@ class Auth
         $httponly = true;
         $payload = encrypt($payload);
 
-        if (! setcookie($this->cookieName(), $payload, $expires, $path, $secure, $httponly) ) {
+        if (! setcookie($this->cookieName(), $payload, $expires, $path, '', $secure, $httponly) ) {
             $this->throwException('failed to set cookie.');
         }
 

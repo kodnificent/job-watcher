@@ -1,6 +1,6 @@
 <?php
 
-namespace Kodnificent\JobWatcher;
+namespace Kodnificent\JobWatcher\Exceptions;
 
 use RuntimeException;
 

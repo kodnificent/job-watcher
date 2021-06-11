@@ -1,10 +1,10 @@
 <?php
 
-namespace Kodnificent\JobWatcher\Tests\Feature;
+namespace Kodnificent\JobWatcher\Tests\Feature\Lumen;
 
 use Kodnificent\JobWatcher\Tests\LumenTestCase;
 
-class LumenDashboardTest extends LumenTestCase
+class DashboardTest extends LumenTestCase
 {
     public function testLumenUserCanView_DashboardPage()
     {
