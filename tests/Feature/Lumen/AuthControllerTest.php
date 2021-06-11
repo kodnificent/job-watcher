@@ -17,8 +17,18 @@ class AuthControllerTest extends LumenTestCase
             'password' => 'password',
         ]);
 
-        $this->response->assertSuccessful();
+        $this->response
+            ->assertSuccessful()
+            ->assertJsonStructure(['message', 'client']);
 
         Auth::assertCookieSet();
+    }
+
+    public function testLumenUserCan_LogoutSuccessfully()
+    {
+        $this->post(route('job-watcher.api.logout'));
+        $this->response->assertSuccessful();
+
+        Auth::assertCookieNotSet();
     }
 }

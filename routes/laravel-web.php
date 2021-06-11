@@ -6,6 +6,7 @@ Route::name('api.')
     ->prefix('api')
     ->group(function () {
         Route::post('login', 'AuthController@login')->name('login');
+        Route::post('logout', 'AuthController@logout')->name('logout');
     });
 
 Route::get('', fn () => view('job-watcher::shell'));

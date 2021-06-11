@@ -17,8 +17,17 @@ class AuthControllerTest extends LaravelTestCase
             'password' => 'password',
         ]);
 
-        $res->assertSuccessful();
+        $res->assertSuccessful()
+            ->assertJsonStructure(['message', 'client']);
 
         Auth::assertCookieSet();
+    }
+
+    public function testLaravelUserCan_LogoutSuccessfully()
+    {
+        $res = $this->post(route('job-watcher.api.logout'));
+        $res->assertSuccessful();
+
+        Auth::assertCookieNotSet();
     }
 }

@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function login(Request $request): JsonResponse
     {
-        Validator::make($request->all(), $this->rules())->validate();
+        Validator::make($request->all(), $this->loginRules())->validate();
 
         if (! Auth::validate($request->password, $request->username)) {
             throw ValidationException::withMessages([
@@ -28,7 +28,14 @@ class AuthController extends Controller
         ]);
     }
 
-    protected function rules(): array
+    public function logout(Request $request): JsonResponse
+    {
+        Auth::logout();
+
+        return new JsonResponse(['message' => 'Logout successful.']);
+    }
+
+    protected function loginRules(): array
     {
         return [
             'username' => 'required',

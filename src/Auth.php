@@ -84,14 +84,15 @@ class Auth
     }
 
     /**
-     * Creates an auth user and sets an http only cookie.
+     * Creates an auth user and sets a http only cookie.
+     * When $rememberLogin is set to true, cookie is set to expire after 5 years.
      */
     public function login(bool $rememberLogin = false): object
     {
         // if the remember variable is set to true,
-        // we want to remember the client for a year
+        // we want to remember the client for 5 years
         // else we set the cookie to last for only an hour.
-        $seconds = $rememberLogin ? (60 * 60 * 24 * 7 * 52) : (60 * 60);
+        $seconds = $rememberLogin ? 157248000 : 3600;
         $expiry = time() + $seconds;
         $id = Str::random(10);
 
@@ -105,12 +106,31 @@ class Auth
         return $this->client = $client;
     }
 
+    public function logout(): void
+    {
+        $this->unsetCookie();
+    }
+
     /**
      * Assert that the login cookie has been set.
      */
     public function assertCookieSet(): void
     {
         Assert::assertTrue($this->cookieSet, 'No cookie has been set.');
+    }
+
+    /**
+     * Assert that the login cookie is not set.
+     */
+    public function assertCookieNotSet(): void
+    {
+        Assert::assertFalse($this->cookieSet, 'Login cookie has been set.');
+    }
+
+    protected function unsetCookie(): void
+    {
+        setcookie($this->cookieName(), null, time() - 157248000);
+        $this->cookieSet = false;
     }
 
     protected function setCookie($payload, int $expires): void

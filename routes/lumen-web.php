@@ -10,6 +10,11 @@ $router->group([
         'as' => 'login',
         'uses' => 'AuthController@login'
     ]);
+
+    $router->post('logout', [
+        'as' => 'logout',
+        'uses' => 'AuthController@logout'
+    ]);
 });
 
 $router->get('', fn () => view('job-watcher::shell'));

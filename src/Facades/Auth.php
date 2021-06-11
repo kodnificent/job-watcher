@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \stdClass login(bool $remember = false)
  * @method static bool validate(string $passphrase, string $user = 'root')
  * @method static void assertCookieSet()
+ * @method static void assertCookieNotSet()
  *
  * @see \Kodnificent\JobWatcher\Auth
  */
