@@ -9,4 +9,4 @@ Route::name('api.')
         Route::post('logout', 'AuthController@logout')->name('logout');
     });
 
-Route::get('', fn () => view('job-watcher::shell'));
+Route::get('{route?}', fn () => view('job-watcher::shell'))->where(['route' => '.*']);

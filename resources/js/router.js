@@ -14,12 +14,12 @@ const routes = [
     component: Dashboard,
   },
   {
-    path: 'jobs',
+    path: '/jobs',
     name: 'jobs',
     component: Jobs,
   },
   {
-    path: 'login',
+    path: '/login',
     name: 'login',
     component: Login,
   },

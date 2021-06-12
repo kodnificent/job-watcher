@@ -14,4 +14,14 @@ class DashboardTest extends LumenTestCase
             ->assertSuccessful()
             ->assertViewIs('job-watcher::shell');
     }
+
+    public function testAnyGetRequestTo_JobWatchPrefix_ShouldReturn_AppShellView()
+    {
+        $this->get(app('job-watcher')->routePrefix() . '/some-random-route/that-is-deeply-nested');
+
+
+        $this->response
+            ->assertSuccessful()
+            ->assertViewIs('job-watcher::shell');
+    }
 }

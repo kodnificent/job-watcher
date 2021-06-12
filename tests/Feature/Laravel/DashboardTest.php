@@ -19,4 +19,13 @@ class DashboardTest extends LaravelTestCase
         $res->assertSuccessful()
             ->assertViewIs('job-watcher::shell');
     }
+
+    public function testAnyGetRequestTo_JobWatchPrefix_ShouldReturn_AppShellView()
+    {
+        $this->artisan('vendor:publish', ['--tag' => 'job-watcher-assets']);
+
+        $res = $this->get(app('job-watcher')->routePrefix() . '/some-random-route/that-is-deeply-nested');
+        $res->assertSuccessful()
+            ->assertViewIs('job-watcher::shell');
+    }
 }

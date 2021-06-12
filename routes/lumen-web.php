@@ -18,3 +18,4 @@ $router->group([
 });
 
 $router->get('', fn () => view('job-watcher::shell'));
+$router->get('{route: .*}', fn () => view('job-watcher::shell'));
