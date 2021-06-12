@@ -1,11 +1,11 @@
 <?php
 
-namespace Kodnificent\JobWatcher\Tests\Feature;
+namespace Kodnificent\JobWatcher\Tests\Feature\Laravel;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Kodnificent\JobWatcher\Tests\LaravelTestCase;
 
-class LaravelDashboardTest extends LaravelTestCase
+class DashboardTest extends LaravelTestCase
 {
     use WithoutMiddleware;
 
@@ -16,6 +16,15 @@ class LaravelDashboardTest extends LaravelTestCase
         $this->artisan('vendor:publish', ['--tag' => 'job-watcher-assets']);
 
         $res = $this->get(app('job-watcher')->routePrefix());
+        $res->assertSuccessful()
+            ->assertViewIs('job-watcher::shell');
+    }
+
+    public function testAnyGetRequestTo_JobWatchPrefix_ShouldReturn_AppShellView()
+    {
+        $this->artisan('vendor:publish', ['--tag' => 'job-watcher-assets']);
+
+        $res = $this->get(app('job-watcher')->routePrefix() . '/some-random-route/that-is-deeply-nested');
         $res->assertSuccessful()
             ->assertViewIs('job-watcher::shell');
     }

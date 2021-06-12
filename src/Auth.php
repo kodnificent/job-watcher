@@ -2,8 +2,12 @@
 
 namespace Kodnificent\JobWatcher;
 
-use Firebase\JWT\JWT;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
+use Illuminate\Testing\Assert;
+use Kodnificent\JobWatcher\Exceptions\AuthException;
+use Kodnificent\JobWatcher\Facades\JobWatcher;
 use stdClass;
 
 class Auth
@@ -17,6 +21,8 @@ class Auth
      * @return null|\stdClass
      */
     protected $client = null;
+
+    protected $cookieSet = false;
 
     public function __construct($app)
     {
@@ -36,23 +42,18 @@ class Auth
             return $this->client;
         }
 
-        $request = $this->app->make('request');
-        $token = $request->bearerToken();
+        $cookie = Request::cookie($this->cookieName());
 
-        if (! $token) {
+        if (! $cookie) {
             return null;
         }
 
         try {
-            $jwt = $this->decodeToken($token);
-        } catch (\Throwable $e) {
-            // token is invalid, we return no client
+            $this->client = decrypt($cookie);
+        } catch (DecryptException $e) {
             return null;
         }
 
-        $this->client = new stdClass;
-        $this->client->id = $jwt->sub;
-        $this->client->user = $jwt->user;
         return $this->client;
     }
 
@@ -77,53 +78,83 @@ class Auth
     /**
      * Attempt to validate a user's credentials.
      */
-    public function validate(string $passphrase, string $user = 'root'): bool
+    public function validate(string $passphrase, string $username = 'root'): bool
     {
-        return $user === 'root' && $passphrase === $this->passphrase();
+        return $username === 'root' && $passphrase === $this->passphrase();
     }
 
     /**
-     * Creates an auth user. User ->token to get the generated token.
+     * Creates an auth user and sets a http only cookie.
+     * When $rememberLogin is set to true, cookie is set to expire after 5 years.
      */
-    public function login(): object
+    public function login(bool $rememberLogin = false): object
     {
+        // if the remember variable is set to true,
+        // we want to remember the client for 5 years
+        // else we set the cookie to last for only an hour.
+        $seconds = $rememberLogin ? 157248000 : 3600;
+        $expiry = time() + $seconds;
         $id = Str::random(10);
-        $user = 'root';
+
         $client = new stdClass;
-        $client->user = $user;
         $client->id = $id;
-        $client->token = $this->generateToken(['sub' => $id, 'user' => $user]);
+        $client->username = 'root';
+        $client->login_expiry = $expiry;
+
+        $this->setCookie($client, $expiry);
 
         return $this->client = $client;
     }
 
-    protected function config($key = null, $default = null)
+    public function logout(): void
     {
-        $keyName = $key ? "job-watcher.auth.$key" : 'job-watcher.auth';
-
-        return config($keyName, $default);
+        $this->unsetCookie();
     }
 
-    protected function generateToken($payload): string
+    /**
+     * Assert that the login cookie has been set.
+     */
+    public function assertCookieSet(): void
     {
-        return JWT::encode($payload, $this->signingKey(), 'HS256');
+        Assert::assertTrue($this->cookieSet, 'No cookie has been set.');
     }
 
-    protected function decodeToken(string $token): object
+    /**
+     * Assert that the login cookie is not set.
+     */
+    public function assertCookieNotSet(): void
     {
-        return JWT::decode($token, $this->signingKey(), ['HS256']);
+        Assert::assertFalse($this->cookieSet, 'Login cookie has been set.');
     }
 
-    protected function signingKey(): string
+    protected function unsetCookie(): void
     {
-        $signingKey = $this->config('signing_key') ?: $this->throwException('JobWatcher Signing key not found.');
+        setcookie($this->cookieName(), null, time() - 157248000);
+        $this->cookieSet = false;
+    }
 
-        return $signingKey;
+    protected function setCookie($payload, int $expires): void
+    {
+        $path = JobWatcher::routePrefix();
+        $secure = $this->app->environment() === 'production' ? true : false;
+        $httponly = true;
+        $payload = encrypt($payload);
+
+        if (! setcookie($this->cookieName(), $payload, $expires, $path, '', $secure, $httponly) ) {
+            $this->throwException('failed to set cookie.');
+        }
+
+        $this->cookieSet = true;
+    }
+
+    protected function cookieName(): string
+    {
+        return 'job-watcher:auth';
     }
 
     protected function passphrase(): string
     {
-        $phrase = $this->config('passphrase') ?: $this->throwException('Job watcher passphrase not found.');
+        $phrase = config('job-watcher.auth.passphrase') ?: $this->throwException('Job watcher passphrase not found.');
 
         return $phrase;
     }
