@@ -2,7 +2,6 @@
 
 namespace Kodnificent\JobWatcher;
 
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Lumen\Routing\Router;
@@ -29,6 +28,7 @@ class JobWatcherServiceProvider extends ServiceProvider
     {
         $this->registerPublishables();
         $this->registerRoutes();
+        $this->app->make('job-watcher')->onBoot();
     }
 
     protected function registerPublishables(): void
@@ -44,11 +44,14 @@ class JobWatcherServiceProvider extends ServiceProvider
                 $this->publishes([
                     __DIR__ . '/../public/vendor/job-watcher' => public_path('vendor/job-watcher')
                 ], 'job-watcher-assets');
+
+                $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
             }
         }
 
         elseif ($this->app->make('job-watcher')->isLumenApp()) {
             $this->app->configure('job-watcher');
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
     }
 

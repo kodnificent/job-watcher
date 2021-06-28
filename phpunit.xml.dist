@@ -33,5 +33,10 @@
         <env name="CACHE_DRIVER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="JOBWATCHER_PASSPHRASE" value="password"/>
+        <env name="DB_CONNECTION" value="mysql"/>
+        <env name="DB_HOST" value="database"/>
+        <env name="DB_DATABASE" value="job-watcher"/>
+        <env name="DB_USERNAME" value="root"/>
+        <env name="DB_PASSWORD" value="password"/>
     </php>
 </phpunit>
