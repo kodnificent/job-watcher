@@ -13,6 +13,6 @@ class FailedJob extends Job
 
     public function handle()
     {
-        $this->fail();
+        throw new \Exception('job failed on purpose.');
     }
 }

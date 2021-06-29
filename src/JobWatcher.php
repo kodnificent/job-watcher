@@ -74,65 +74,15 @@ class JobWatcher
         }
 
         // we register queue events
-        $this->registerQueueEvents($this->app->make('queue'));
+        $this->registerQueueListeners($this->app->make('queue'));
 
         return $this->booted = true;
     }
 
-    protected function registerQueueEvents(QueueManager $queue): void
+    protected function registerQueueListeners(QueueManager $queue): void
     {
-        $queue->before(fn (JobProcessing $event) => $this->handleProcessingJob($event));
-        $queue->after(fn (JobProcessed $event) => $this->handleProcessedJob($event));
-        $queue->failing(fn (JobFailed $event) => $this->handleFailedJob($event));
-    }
-
-    protected function handleProcessingJob(JobProcessing $event): void
-    {
-        $log = new JobWatcherLog;
-        $log->uuid = $event->job->payload()['uuid'];
-        $log->name = $event->job->resolveName();
-        $log->connection = $event->connectionName;
-        $log->queue = $event->job->getQueue();
-        $log->payload = $this->getJobCommand($event->job);
-        $log->exception = null;
-        $log->status = 'processing';
-        $log->save();
-    }
-
-    protected function handleProcessedJob(JobProcessed $event)
-    {
-        $log = new JobWatcherLog;
-        $log->uuid = $event->job->payload()['uuid'];
-        $log->name = $event->job->resolveName();
-        $log->connection = $event->connectionName;
-        $log->queue = $event->job->getQueue();
-        $log->payload = $this->getJobCommand($event->job);
-        $log->exception = null;
-        $log->status = 'processed';
-        $log->save();
-    }
-
-    protected function handleFailedJob(JobFailed $event)
-    {
-        $log = new JobWatcherLog;
-        $log->uuid = $event->job->payload()['uuid'];
-        $log->name = $event->job->resolveName();
-        $log->connection = $event->connectionName;
-        $log->queue = $event->job->getQueue();
-        $log->payload = $this->getJobCommand($event->job);
-        $log->exception = $event->exception;
-        $log->status = 'failed';
-        $log->save();
-    }
-
-    protected function getJobCommand(Job $job)
-    {
-        $data = $job->payload()['data'];
-
-        if (Str::startsWith($data['command'], 'O:')) {
-            return unserialize($data['command']);
-        }
-
-        throw new \RuntimeException('Unable to extract job payload.');
+        $queue->before(fn (JobProcessing $event) => (new QueueListener($event))->listen());
+        $queue->after(fn (JobProcessed $event) => (new QueueListener($event))->listen());
+        $queue->failing(fn (JobFailed $event) => (new QueueListener($event))->listen());
     }
 }

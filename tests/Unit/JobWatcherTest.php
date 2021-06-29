@@ -2,6 +2,7 @@
 
 namespace Kodnificent\JobWatcher\Tests\Unit;
 
+use Kodnificent\JobWatcher\Models\JobWatcherLog;
 use Kodnificent\JobWatcher\Tests\Jobs\FailedJob;
 use Kodnificent\JobWatcher\Tests\Jobs\ProcessedJob;
 use Kodnificent\JobWatcher\Tests\LumenTestCase;
@@ -13,15 +14,8 @@ class JobWatcherTest extends LumenTestCase
 
     public function testProcessingAndProcessedJobs_AreLoggedToTheDatabase()
     {
-        $job = new ProcessedJob;
+        $job = new ProcessedJob(['key' => 'value']);
         dispatch($job);
-
-        $this->seeInDatabase('job_watcher_logs', [
-            'status' => 'processing',
-            'connection' => 'sync',
-            'queue' => 'sync',
-            'exception' => null
-        ]);
 
         $this->seeInDatabase('job_watcher_logs', [
             'status' => 'processed',
@@ -33,8 +27,12 @@ class JobWatcherTest extends LumenTestCase
 
     public function testFailedJobs_AreLoggedToTheDatabase()
     {
-        $job = new FailedJob;
-        dispatch($job);
+        try {
+            $job = new FailedJob;
+            dispatch($job);
+        } catch (\Throwable $e) {
+            //
+        }
 
         $this->seeInDatabase('job_watcher_logs', [
             'status' => 'failed',
