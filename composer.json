@@ -16,7 +16,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Kodnificent\\JobWatcher\\Tests\\": "tests"
+            "Kodnificent\\JobWatcher\\Tests\\": "tests",
+            "Kodnificent\\JobWatcher\\Database\\Factories\\": "database/factories/"
         }
     },
     "require": {

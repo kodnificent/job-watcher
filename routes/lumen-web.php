@@ -15,6 +15,13 @@ $router->group([
         'as' => 'logout',
         'uses' => 'AuthController@logout'
     ]);
+
+    $router->group([
+        'prefix' => 'logs',
+        'as' => 'logs',
+    ], function () use ($router) {
+        $router->get('', ['as' => 'index', 'uses' => 'LogController@index']);
+    });
 });
 
 $router->get('', fn () => view('job-watcher::shell'));

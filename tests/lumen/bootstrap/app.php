@@ -28,7 +28,7 @@ $app->instance('path.public', $app->basePath('public'));
 
 $app->withFacades();
 
-// $app->withEloquent();
+$app->withEloquent();
 
 /*
 |--------------------------------------------------------------------------

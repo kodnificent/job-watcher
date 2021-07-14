@@ -19,7 +19,6 @@ class DashboardTest extends LumenTestCase
     {
         $this->get(app('job-watcher')->routePrefix() . '/some-random-route/that-is-deeply-nested');
 
-
         $this->response
             ->assertSuccessful()
             ->assertViewIs('job-watcher::shell');
