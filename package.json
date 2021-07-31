@@ -2,8 +2,9 @@
   "private": true,
   "scripts": {
     "test": "echo \"no test script specified\"",
-    "dev": "webpack --node-env development --watch --progress",
-    "build": "webpack --node-env production"
+    "dev": "npx mix",
+    "watch": "npx mix watch",
+    "build": "npx mix --production"
   },
   "repository": {
     "type": "git",
@@ -11,6 +12,8 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@tailwindcss/forms": "^0.3.3",
+    "axios": "^0.21.1",
     "fs-extra": "^10.0.0",
     "laravel-mix": "^6.0.19",
     "mini-css-extract-plugin": "^1.6.0",

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="text-gray-900 leading-tight">
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,6 +12,10 @@
     <div id="app">
       <router-view />
     </div>
+
+    <script>
+      window.config = @json(\Kodnificent\JobWatcher\Facades\JobWatcher::jsConfig());
+    </script>
 
     <script src="{{ mix('js/manifest.js', 'vendor/job-watcher') }}"></script>
     <script src="{{ mix('js/vendor.js', 'vendor/job-watcher') }}"></script>

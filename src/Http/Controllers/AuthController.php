@@ -20,7 +20,7 @@ class AuthController extends Controller
             ]);
         }
 
-        $client = Auth::login();
+        $client = Auth::login((bool) $request->remember);
 
         return new JsonResponse([
             'message' => 'Login successful.',
@@ -40,6 +40,7 @@ class AuthController extends Controller
         return [
             'username' => 'required',
             'password' => 'required',
+            'remember' => 'required'
         ];
     }
 }

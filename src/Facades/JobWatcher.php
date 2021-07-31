@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool isLaravelApp()
  * @method static string routePrefix()
  * @method static array routeMiddlewares()
+ * @method static string jsConfig()
  *
  * @see \Kodnificent\JobWatcher\JobWatcher
  */

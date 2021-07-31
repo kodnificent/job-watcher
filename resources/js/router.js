@@ -1,9 +1,10 @@
-import VueRouter from 'vue-router';
+import { http } from '@/http';
+import Dashboard from '@/views/Dashboard.vue';
+import NotFound from '@/views/errors/404.vue';
+import Jobs from '@/views/Jobs.vue';
+import Login from '@/views/Login.vue';
 import Vue from 'vue';
-import NotFound from '@/views/errors/404';
-import Dashboard from '@/views/Dashboard';
-import Jobs from '@/views/Jobs';
-import Login from '@/views/Login';
+import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
@@ -30,12 +31,47 @@ const routes = [
   }
 ];
 
+const authenticated = () => window.localStorage.getItem('authClient') !== null;
+
+/**
+ * Register the authentication guard.
+ *
+ * @param {VueRouter} router
+ */
+const registerAuthGuard = (router) => {
+  router.beforeEach((to, from, next) => {
+    if (to.name !== 'login' && !authenticated()) next({name: 'login'})
+    else next()
+  });
+
+  // redirect to login for 401 responses.
+  http.interceptors.response.use((res) => res, (error) => {
+    console.log(error)
+    if (error.status === 401) {
+      window.localStorage.removeItem('authClient')
+      router.push({name: 'login'})
+    }
+  });
+}
+
+const registerGuestGuard = (router) => {
+  router.beforeEach((to, from, next) => {
+    if (to.name == 'login' && authenticated()) next({name: 'dashboard'})
+    else next()
+  });
+}
+
 const router = ({base}) => {
-  return new VueRouter({
+  const r = new VueRouter({
     base,
     mode: 'history',
     routes
   });
+
+  registerAuthGuard(r)
+  registerGuestGuard(r)
+
+  return r
 }
 
 export default router;

@@ -1,0 +1,11 @@
+{
+    "tailwindCSS.includeLanguages": {
+        "vue": "html",
+        "vue-html": "html",
+        "blade.php": "html",
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.organizeImports": true,
+    }
+}

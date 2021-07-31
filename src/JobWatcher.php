@@ -8,9 +8,7 @@ use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Queue\QueueManager;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Kodnificent\JobWatcher\Models\JobWatcherLog;
 use Laravel\Lumen\Application as LumenApplication;
 
 class JobWatcher
@@ -52,7 +50,9 @@ class JobWatcher
      */
     public function routePrefix(): string
     {
-        return $this->config('route.prefix') ?: 'job-watcher';
+        $prefix = $this->config('route.prefix') ?: 'job-watcher';
+
+        return Str::startsWith('/', $prefix) ? $prefix : "/$prefix";
     }
 
     /**
@@ -77,6 +77,13 @@ class JobWatcher
         $this->registerQueueListeners($this->app->make('queue'));
 
         return $this->booted = true;
+    }
+
+    public function jsConfig(): array
+    {
+        return [
+            'base_path' => $this->routePrefix()
+        ];
     }
 
     protected function registerQueueListeners(QueueManager $queue): void

@@ -1,16 +1,27 @@
 const mix = require('laravel-mix');
 const fs = require('fs-extra');
+const path = require('path');
 
 mix.js('resources/js/app.js', 'js')
+  .vue({extractStyles: true})
   .postCss('resources/css/app.css', 'css', [
     require('tailwindcss')
   ])
+  .copyDirectory('resources/imgs', 'public/vendor/job-watcher/imgs')
+  .webpackConfig({
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'resources/js'),
+      }
+    }
+  })
   .version()
-  .vue({extractStyles: true})
-  .setPublicPath('public')
-  .extract().after(function () {
+  .setPublicPath('public/vendor/job-watcher')
+  .extract()
+  .disableSuccessNotifications()
+  .after(function () {
     // const dest = 'laravel/public/vendor/job-watcher';
-    // fs.copy('public', dest)
+    // fs.copy('public/vendor/job-watcher', dest)
     //   .then(() => console.log(`public folder successfully copied to ${dest}`))
     //   .catch((err) => console.error(`Failed to copy public folder to laravel app. Err: ${err}`));
   });
