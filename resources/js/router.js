@@ -1,7 +1,6 @@
 import { http } from '@/http';
 import Dashboard from '@/views/Dashboard.vue';
 import NotFound from '@/views/errors/404.vue';
-import Jobs from '@/views/Jobs.vue';
 import Login from '@/views/Login.vue';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
@@ -14,11 +13,11 @@ const routes = [
     name: 'dashboard',
     component: Dashboard,
   },
-  {
-    path: '/jobs',
-    name: 'jobs',
-    component: Jobs,
-  },
+  // {
+  //   path: '/jobs',
+  //   name: 'jobs',
+  //   component: Jobs,
+  // },
   {
     path: '/login',
     name: 'login',
@@ -46,7 +45,7 @@ const registerAuthGuard = (router) => {
 
   // redirect to login for 401 responses.
   http.interceptors.response.use((res) => res, (error) => {
-    console.log(error)
+    // console.log(error)
     if (error.status === 401) {
       window.localStorage.removeItem('authClient')
       router.push({name: 'login'})

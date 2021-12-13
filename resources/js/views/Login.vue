@@ -46,13 +46,16 @@
         </div>
 
         <button
-          class="mt-3 w-full bg-primary rounded px-3 py-3 text-center
+          class="mt-3 w-full bg-primary rounded px-3 h-[40px] text-center
             font-semibold focus:outline-none focus:ring-4
             focus:ring-primary focus:ring-opacity-50"
           type="submit"
           aria-live="polite">
             <span v-if="!authenticating" class="text-white uppercase">Login</span>
-            <span v-else>authenticating</span>
+            <div v-else class="flex items-center justify-center">
+              <img aria-hidden="true" src="/vendor/job-watcher/imgs/spin-1.5s-28px.svg" alt="loading icon">
+              <span class="sr-only">Loading</span>
+            </div>
         </button>
       </form>
     </div>
@@ -60,7 +63,8 @@
 </template>
 
 <script>
-import { api } from '@/http'
+import { api } from '@/http';
+// import Spin from l;
 
 export default {
   data() {
