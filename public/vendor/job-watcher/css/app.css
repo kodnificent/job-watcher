@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css2?family=Source+Sans+3&display=swap);
 .glide {
   position: relative;
   width: 100%;
@@ -188750,6 +188751,7 @@ video {
 
 body {
   color: #010C13;
+  font-family: "Source Sans 3", sans-serif !important;
 }
 .metrics-data {
   --tw-bg-opacity: 1;
@@ -188768,4 +188770,107 @@ body {
 }
 .metrics-data__text {
   padding-left: 28px;
+}
+.terminal {
+  background: #2E071C;
+  height: 300px;
+  width: 100%;
+  margin-top: 28px;
+  padding: 25px 32px;
+  overflow: auto;
+}
+.terminal .job-list {
+  color: #ffffff;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.terminal .job-list .job {
+  display: flex;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.terminal .job-list .job__id {
+  max-width: 18%;
+  color: #E5E5E5;
+  display: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (min-width: 768px){
+.terminal .job-list .job__id{
+    display: block;
+}
+}
+@media (min-width: 1024px){
+.terminal .job-list .job__id{
+    max-width: 100%;
+}
+}
+@media (min-width: 768px) {
+.terminal .job-list .job__id {
+    max-width: 20%;
+}
+}
+@media (min-width: 1024px) {
+.terminal .job-list .job__id {
+    max-width: 100%;
+}
+}
+.terminal .job-list .job__name {
+  font-weight: 700;
+  margin-left: 1rem;
+}
+.terminal .job-list .job__time {
+  color: #e5e5e5;
+  display: none;
+  margin-left: 1rem;
+  opacity: 0.7;
+}
+@media (min-width: 768px){
+.terminal .job-list .job__time{
+    display: inline;
+}
+}
+.terminal .job-list .job:not(:first-child) {
+  margin-top: 0.5rem;
+}
+.terminal .job-list .job[data-status=processed] .job__name {
+  color: #28BF25;
+}
+.terminal .job-list .job[data-status=pending] .job__name {
+  opacity: 0.2;
+  --tw-text-opacity: 1;
+  color: rgba(252, 211, 77, var(--tw-text-opacity));
+  -webkit-animation-name: pending;
+          animation-name: pending;
+  -webkit-animation-duration: 1.3s;
+          animation-duration: 1.3s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+}
+.terminal .job-list .job[data-status=failed] .job__name {
+  color: #ff0000;
+}
+@-webkit-keyframes pending {
+0% {
+    opacity: 0.2;
+}
+50% {
+    opacity: 1;
+}
+100% {
+    opacity: 0.2;
+}
+}
+@keyframes pending {
+0% {
+    opacity: 0.2;
+}
+50% {
+    opacity: 1;
+}
+100% {
+    opacity: 0.2;
+}
 }

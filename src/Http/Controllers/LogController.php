@@ -13,7 +13,7 @@ use Kodnificent\JobWatcher\Models\JobWatcherLog;
 
 class LogController extends Controller
 {
-    public $perPage = 100;
+    public $perPage = 25;
 
     public function index(Request $request): JsonResponse
     {

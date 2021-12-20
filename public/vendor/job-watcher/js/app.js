@@ -60,6 +60,84 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -76,7 +154,24 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      processed_jobs: 300
+      total_jobs: 300,
+      processed_jobs: 257,
+      failed_jobs: 43,
+      jobs: [{
+        id: 1,
+        uuid: '4e7ef713-312e-4d11-9665-4fa1eaf5b7b0',
+        status: 'processed',
+        name: 'App/Jobs/SendEmail',
+        created_at: '16 Dec 21\' 13:02',
+        updated_at: '16 Dec 21\' 13:02'
+      }, {
+        id: 2,
+        uuid: '4e7ef713-312e-4d11-9665-4fa1eaf5b7b0',
+        status: 'pending',
+        name: 'App/Jobs/InnerFolder/HelloWorld',
+        created_at: '16 Dec 21\' 13:02',
+        updated_at: '16 Dec 21\' 13:02'
+      }]
     };
   },
   mounted: function mounted() {
@@ -89,6 +184,8 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     }).mount();
+    var terminal = this.$refs.terminal;
+    terminal.scrollTo(0, terminal.scrollHeight);
   }
 });
 
@@ -1104,7 +1201,7 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "w-full min-h-screen",
+      staticClass: "w-full min-h-screen pb-4",
       staticStyle: { background: "#f5f5f5" }
     },
     [
@@ -1124,7 +1221,7 @@ var render = function() {
         [
           _c(
             "section",
-            { staticClass: "glide mt-20", attrs: { id: "metrics-section" } },
+            { staticClass: "glide mt-10", attrs: { id: "metrics-section" } },
             [
               _c(
                 "div",
@@ -1153,7 +1250,7 @@ var render = function() {
                             _c(
                               "span",
                               { staticClass: "block text-3xl font-bold" },
-                              [_vm._v(_vm._s(_vm.processed_jobs))]
+                              [_vm._v(_vm._s(_vm.total_jobs))]
                             ),
                             _vm._v(" "),
                             _c(
@@ -1175,7 +1272,27 @@ var render = function() {
                           staticClass:
                             "glide__slide metrics-data filter drop-shadow-md"
                         },
-                        [_c("processed-jobs")],
+                        [
+                          _c("processed-jobs"),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "metrics-data__text" }, [
+                            _c(
+                              "span",
+                              { staticClass: "block text-3xl font-bold" },
+                              [_vm._v(_vm._s(_vm.processed_jobs))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "span",
+                              {
+                                staticClass:
+                                  "block text-xl font-normal truncate",
+                                staticStyle: { color: "#383B3E" }
+                              },
+                              [_vm._v("Processed jobs")]
+                            )
+                          ])
+                        ],
                         1
                       ),
                       _vm._v(" "),
@@ -1185,7 +1302,26 @@ var render = function() {
                           staticClass:
                             "glide__slide metrics-data filter drop-shadow-md"
                         },
-                        [_c("failed-jobs")],
+                        [
+                          _c("failed-jobs"),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "metrics-data__text" }, [
+                            _c(
+                              "span",
+                              { staticClass: "block text-3xl font-bold" },
+                              [_vm._v(_vm._s(_vm.failed_jobs))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "span",
+                              {
+                                staticClass: "text-xl font-normal",
+                                staticStyle: { color: "#383B3E" }
+                              },
+                              [_vm._v("Failed jobs")]
+                            )
+                          ])
+                        ],
                         1
                       )
                     ]
@@ -1193,7 +1329,51 @@ var render = function() {
                 ]
               )
             ]
-          )
+          ),
+          _vm._v(" "),
+          _c("section", { staticClass: "mt-10" }, [
+            _c("h1", { staticClass: "text-xl font-bold uppercase" }, [
+              _vm._v("Log Terminal")
+            ]),
+            _vm._v(" "),
+            _c("div", { ref: "terminal", staticClass: "terminal" }, [
+              _c(
+                "ul",
+                {
+                  staticClass: "job-list",
+                  attrs: { "aria-live": "assertive" }
+                },
+                _vm._l(_vm.jobs, function(job) {
+                  return _c(
+                    "li",
+                    {
+                      key: job.id,
+                      staticClass: "job",
+                      attrs: { "data-status": job.status }
+                    },
+                    [
+                      _c("span", { staticClass: "job__id" }, [
+                        _vm._v("#" + _vm._s(job.uuid) + ":")
+                      ]),
+                      _vm._v(" "),
+                      _c("button", { staticClass: "job__name" }, [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(job.name) +
+                            "\n            "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "job__time" }, [
+                        _vm._v(_vm._s(job.updated_at))
+                      ])
+                    ]
+                  )
+                }),
+                0
+              )
+            ])
+          ])
         ]
       )
     ]
