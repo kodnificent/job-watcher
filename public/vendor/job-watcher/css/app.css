@@ -188773,7 +188773,7 @@ body {
 }
 .terminal {
   background: #2E071C;
-  height: 300px;
+  height: calc(100vh - 386px);
   width: 100%;
   margin-top: 28px;
   padding: 25px 32px;
@@ -188786,6 +188786,7 @@ body {
 }
 .terminal .job-list .job {
   display: flex;
+  align-items: flex-start;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
 }
@@ -188810,16 +188811,29 @@ body {
 @media (min-width: 768px) {
 .terminal .job-list .job__id {
     max-width: 20%;
+    width: 150px;
 }
 }
 @media (min-width: 1024px) {
 .terminal .job-list .job__id {
     max-width: 100%;
+    width: 310px;
 }
 }
 .terminal .job-list .job__name {
   font-weight: 700;
   margin-left: 1rem;
+  text-align: left;
+}
+@media (min-width: 768px) {
+.terminal .job-list .job__name {
+    width: 300px;
+}
+}
+@media (min-width: 1024px) {
+.terminal .job-list .job__name {
+    width: 370px;
+}
 }
 .terminal .job-list .job__time {
   color: #e5e5e5;
@@ -188838,7 +188852,7 @@ body {
 .terminal .job-list .job[data-status=processed] .job__name {
   color: #28BF25;
 }
-.terminal .job-list .job[data-status=pending] .job__name {
+.terminal .job-list .job[data-status=processing] .job__name {
   opacity: 0.2;
   --tw-text-opacity: 1;
   color: rgba(252, 211, 77, var(--tw-text-opacity));

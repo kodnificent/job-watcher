@@ -21,6 +21,7 @@ $router->group([
         'as' => 'logs',
     ], function () use ($router) {
         $router->get('', ['as' => 'index', 'uses' => 'LogController@index']);
+        $router->get('stream', ['as' => 'stream', 'uses' => 'LogController@stream']);
         $router->post('{uuid}/retry', ['as' => 'retry', 'uses' => 'LogController@retry']);
     });
 });

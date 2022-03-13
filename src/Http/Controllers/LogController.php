@@ -6,44 +6,83 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Kodnificent\JobWatcher\Http\Resources\LogResource;
 use Kodnificent\JobWatcher\Models\JobWatcherLog;
+use Kodnificent\JobWatcher\QueueListener;
 
 class LogController extends Controller
 {
-    public $perPage = 25;
+    public function stream(Request $request)
+    {
+        $log_time = Carbon::now();
+        return Response::stream(function () use (&$log_time) {
+            while (true) {
+                echo ": checking for new logs\n";
+
+                if ( count($logs = $this->latestLogs($log_time)) > 0 ) {
+                    $enc_data = json_encode($this->logsResponse($logs));
+                    echo "data: $enc_data", "\n\n";
+                }
+
+                // flush the output buffer and send echoed messages to the browser
+                while (ob_get_level() > 0) {
+                    ob_end_flush();
+                }
+
+                flush();
+
+                if ( connection_aborted() ) break;
+
+                sleep(3);
+            }
+
+        }, 200, [
+            'Content-Type' => 'text/event-stream',
+            'Cache-Control' => 'no-cache'
+        ]);
+    }
+
+    public function latestLogs(&$log_time) {
+        $logs = JobWatcherLog::where('created_at', '>=', $log_time)
+            ->orWhere('updated_at', '>=', $log_time)
+            ->orderBy('updated_at', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $log_time = Carbon::now();
+
+        return $logs;
+    }
+
+    public function logsResponse($logs)
+    {
+        $resource = LogResource::collection($logs);
+        $data = [
+            'logs' => $resource,
+            'meta' => [
+                'total_jobs_count' => JobWatcherLog::count(),
+                'processed_jobs_count' => JobWatcherLog::whereStatus('processed')->count(),
+                'failed_jobs_count' => JobWatcherLog::whereStatus('failed')->count(),
+            ],
+        ];
+
+        return $data;
+    }
 
     public function index(Request $request): JsonResponse
     {
-        Validator::make($request->all(), ['status' => 'in:processed,pending,failed'])->validate();
-
         /** @var \Illuminate\Pagination\Paginator $logs */
         $logs = JobWatcherLog::orderBy('updated_at', 'desc')
-            ->when($request->query('status'), fn (Builder $q, $status) => $q->where('status', $status))
-            ->simplePaginate($this->perPage);
+            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
 
-        $resource = LogResource::collection($logs);
-        $paginated = $resource->resource->toArray();
-        $data = [
-            'data' => $resource->resolve($request),
-            'links' => [
-                'first' => $paginated['first_page_url'] ?? null,
-                'last' => $paginated['last_page_url'] ?? null,
-                'prev' => $paginated['prev_page_url'] ?? null,
-                'next' => $paginated['next_page_url'] ?? null,
-            ],
-            'meta' => Arr::except($paginated, [
-                'data',
-                'first_page_url',
-                'last_page_url',
-                'prev_page_url',
-                'next_page_url',
-            ])
-        ];
-
-        return new JsonResponse($data);
+        return new JsonResponse($this->logsResponse($logs));
     }
 
     public function retry(Request $request, string $uuid): JsonResponse

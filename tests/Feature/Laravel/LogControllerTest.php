@@ -22,20 +22,7 @@ class LogControllerTest extends LaravelTestCase
         $res = $this->get($url);
 
         $res->assertSuccessful()
-            ->assertJsonCount(6, 'data');
-    }
-
-    public function testUserCan_FilterLogsBy_Status()
-    {
-        JobWatcherLog::factory()->count(2)->processed()->create();
-        JobWatcherLog::factory()->count(1)->processing()->create();
-        JobWatcherLog::factory()->count(3)->failed()->create();
-
-        $url = route('job-watcher.api.logs.index', ['status' => 'processed']);
-        $res = $this->get($url);
-
-        $res->assertSuccessful();
-        $res->assertJsonCount(2, 'data');
+            ->assertJsonCount(6, 'logs');
     }
 
     public function testUserCan_RetryFailedJob()

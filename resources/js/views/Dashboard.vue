@@ -68,7 +68,7 @@ body
 
 .terminal
   background: #2E071C
-  height: 300px
+  height: calc(100vh - 386px)
   width: 100%
   margin-top: 28px
   padding: 25px 32px
@@ -79,17 +79,23 @@ body
     overflow-x: auto
     padding-bottom: 4px
     .job
-      @apply flex py-1
+      @apply flex py-1 items-start
       &__id
         max-width: 18%
         @screen md
           max-width: 20%
+          width: 150px
         @screen lg
           max-width: 100%
+          width: 310px
         color: #E5E5E5
         @apply truncate lg:max-w-full hidden md:block
       &__name
-        @apply font-bold ml-4
+        @apply font-bold ml-4 text-left
+        @screen md
+          width: 300px
+        @screen lg
+          width: 370px
       &__time
         color: #e5e5e5
         @apply ml-4 opacity-70 hidden md:inline
@@ -100,7 +106,7 @@ body
     .job[data-status="processed"] .job__name
       color: #28BF25
 
-    .job[data-status="pending"] .job__name
+    .job[data-status="processing"] .job__name
       @apply text-yellow-300 opacity-20
       animation-name: pending
       animation-duration: 1.3s
@@ -119,6 +125,7 @@ body
 </style>
 
 <script>
+import { api } from '@/http';
 import Glide from '@glidejs/glide';
 import Logo from '@/components/svg/Logo.vue';
 import TotalJobs from '@/components/svg/TotalJobs.vue';
@@ -137,31 +144,121 @@ export default {
 
   data() {
     return {
-      total_jobs: 300,
-      processed_jobs: 257,
-      failed_jobs: 43,
-      jobs: [
-        {
-          id: 1,
-          uuid: '4e7ef713-312e-4d11-9665-4fa1eaf5b7b0',
-          status: 'processed',
-          name: 'App/Jobs/SendEmail',
-          created_at: '16 Dec 21\' 13:02',
-          updated_at: '16 Dec 21\' 13:02',
-        },
-        {
-          id: 2,
-          uuid: '4e7ef713-312e-4d11-9665-4fa1eaf5b7b0',
-          status: 'pending',
-          name: 'App/Jobs/InnerFolder/HelloWorld',
-          created_at: '16 Dec 21\' 13:02',
-          updated_at: '16 Dec 21\' 13:02',
-        },
-      ],
+      total_jobs: 0,
+      processed_jobs: 0,
+      failed_jobs: 0,
+      jobs: [],
+      jobs_fetched: false,
+      event_source: null,
+      sse_not_supported: typeof(EventSource) === 'undefined',
+      sse_not_supported_msg: `Server-Sent events not supported on this browser.
+        Please use the refresh button to update log.`
     };
   },
 
-  mounted() {
+  computed: {
+    //
+  },
+
+  methods: {
+    /**
+     * Fetch previous job logs.
+     */
+    async fetchJobs() {
+      return await api.get('logs').then(({ data }) => {
+        return data;
+      });
+    },
+
+    /**
+     * Update the component with previous job logs.
+     */
+    async fetchAndUpdateJobs() {
+      const res = await this.fetchJobs();
+      this.jobs = res.logs;
+      this.total_jobs = res.meta.total_jobs_count;
+      this.processed_jobs = res.meta.processed_jobs_count;
+      this.failed_jobs = res.meta.failed_jobs_count;
+
+      if (this.jobs_fetched === false) {
+        this.jobs_fetched = true;
+      }
+    },
+
+    /**
+     * Adds the given job data to the top of the job log.
+     */
+    addToJobLogs(job) {
+      const old_job = this.findJob(job.id);
+
+      if (old_job) {
+        this.deleteJob(old_job.id);
+      }
+
+      this.jobs.unshift(job);
+    },
+
+    /**
+     * Find job by id.
+     */
+    findJob(id) {
+      return this.jobs.find((job) => job.id == id);
+    },
+
+    /**
+     * Remove a job from the log.
+     */
+    deleteJob(id) {
+      const index = this.jobs.findIndex((job) => job.id == id);
+
+      if (index < 0) {
+        return false;
+      }
+
+      this.jobs.splice(index, 1);
+
+      return true;
+    },
+
+    /**
+     * listen for new jobs
+     */
+    startLogStream() {
+      if (this.sse_not_supported === true) {
+        return console.error(this.sse_not_supported_msg);
+      }
+
+      const baseUrl = api.defaults.baseURL;
+      const source = new EventSource(baseUrl + 'logs/stream');
+      source.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+
+        this.total_jobs = data.meta.total_jobs_count;
+        this.processed_jobs = data.meta.processed_jobs_count;
+        this.failed_jobs = data.meta.failed_jobs_count;
+
+        const logs = data.logs;
+        // we want to push from the oldest
+        // that's why we are reversing.
+        logs.reverse();
+        logs.forEach(job => this.addToJobLogs(job));
+      };
+      this.event_source = source;
+    },
+
+    /**
+     * Close the open stream
+     */
+    endLogStream() {
+      if (null == this.event_source) {
+        return console.warn('No open stream.');
+      }
+
+      this.event_source.close();
+    }
+  },
+
+  async mounted() {
     new Glide('#metrics-section', {
       // type: 'carousel',
       perView: 0,
@@ -172,8 +269,14 @@ export default {
       },
     }).mount();
 
-    const terminal = this.$refs.terminal
-    terminal.scrollTo(0, terminal.scrollHeight)
+    const terminal = this.$refs.terminal;
+    terminal.scrollTo(0, terminal.scrollHeight);
+
+    await this.fetchAndUpdateJobs();
+    // this.startLogStream();
+    window.addEventListener('beforeunload', (e) => {
+      this.endLogStream();
+    });
   },
 }
 </script>

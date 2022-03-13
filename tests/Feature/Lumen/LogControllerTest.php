@@ -23,21 +23,7 @@ class LogControllerTest extends LumenTestCase
 
         $this->response
             ->assertSuccessful()
-            ->assertJsonCount(6, 'data');
-    }
-
-    public function testLumenUserCan_FilterLogsBy_Status()
-    {
-        JobWatcherLog::factory()->count(2)->processed()->create();
-        JobWatcherLog::factory()->count(1)->processing()->create();
-        JobWatcherLog::factory()->count(3)->failed()->create();
-
-        $url = route('job-watcher.api.logs.index', ['status' => 'processed']);
-        $this->get($url);
-
-        $this->response
-            ->assertSuccessful()
-            ->assertJsonCount(2, 'data');
+            ->assertJsonCount(6, 'logs');
     }
 
     public function testLumenUserCan_RetryFailedJob()

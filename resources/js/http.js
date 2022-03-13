@@ -7,9 +7,29 @@ const api = http.create({
 });
 
 api.interceptors.response.use((res) => res, (error) => {
-  if (error.response && error.response.status === 401) {
+  if (! error.response) {
+    // request never made it to the server
+    return Promise.reject(error);
+  }
+
+  const status_code = error.response.status
+
+  if (status_code === 401) {
     window.localStorage.removeItem('authClient');
-    location.href = ''
+    location.href = '';
+    // @todo popup login modal instead
+  }
+
+  else if (status_code === 422) {
+    // handle form error
+  }
+
+  else if (status_code >= 400 && status_code < 500) {
+    // client errors
+  }
+
+  else {
+    // server error
   }
 
   return Promise.reject(error);

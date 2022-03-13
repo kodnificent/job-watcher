@@ -12,6 +12,7 @@ Route::name('api.')
             ->prefix('logs')
             ->group(function () {
                 Route::get('', 'LogController@index')->name('index');
+                Route::get('stream', 'LogController@stream')->name('stream');
                 Route::post('{uuid}/retry', 'LogController@retry')->name('retry');
             });
     });

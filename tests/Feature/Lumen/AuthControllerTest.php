@@ -15,6 +15,7 @@ class AuthControllerTest extends LumenTestCase
         $this->post(route('job-watcher.api.login'), [
             'username' => 'root',
             'password' => 'password',
+            'remember' => true,
         ]);
 
         $this->response

@@ -11,13 +11,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _glidejs_glide__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @glidejs/glide */ "./node_modules/@glidejs/glide/dist/glide.esm.js");
-/* harmony import */ var _components_svg_Logo_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/components/svg/Logo.vue */ "./resources/js/components/svg/Logo.vue");
-/* harmony import */ var _components_svg_TotalJobs_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/components/svg/TotalJobs.vue */ "./resources/js/components/svg/TotalJobs.vue");
-/* harmony import */ var _components_svg_ProcessedJobs_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/components/svg/ProcessedJobs.vue */ "./resources/js/components/svg/ProcessedJobs.vue");
-/* harmony import */ var _components_svg_FailedJobs_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/components/svg/FailedJobs.vue */ "./resources/js/components/svg/FailedJobs.vue");
-/* harmony import */ var _glidejs_glide_dist_css_glide_core_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @glidejs/glide/dist/css/glide.core.css */ "./node_modules/@glidejs/glide/dist/css/glide.core.css");
-/* harmony import */ var _glidejs_glide_dist_css_glide_theme_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @glidejs/glide/dist/css/glide.theme.css */ "./node_modules/@glidejs/glide/dist/css/glide.theme.css");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/http */ "./resources/js/http.js");
+/* harmony import */ var _glidejs_glide__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @glidejs/glide */ "./node_modules/@glidejs/glide/dist/glide.esm.js");
+/* harmony import */ var _components_svg_Logo_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/components/svg/Logo.vue */ "./resources/js/components/svg/Logo.vue");
+/* harmony import */ var _components_svg_TotalJobs_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/components/svg/TotalJobs.vue */ "./resources/js/components/svg/TotalJobs.vue");
+/* harmony import */ var _components_svg_ProcessedJobs_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/components/svg/ProcessedJobs.vue */ "./resources/js/components/svg/ProcessedJobs.vue");
+/* harmony import */ var _components_svg_FailedJobs_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/components/svg/FailedJobs.vue */ "./resources/js/components/svg/FailedJobs.vue");
+/* harmony import */ var _glidejs_glide_dist_css_glide_core_css__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @glidejs/glide/dist/css/glide.core.css */ "./node_modules/@glidejs/glide/dist/css/glide.core.css");
+/* harmony import */ var _glidejs_glide_dist_css_glide_theme_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @glidejs/glide/dist/css/glide.theme.css */ "./node_modules/@glidejs/glide/dist/css/glide.theme.css");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -138,6 +147,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -147,45 +163,203 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    Logo: _components_svg_Logo_vue__WEBPACK_IMPORTED_MODULE_1__.default,
-    TotalJobs: _components_svg_TotalJobs_vue__WEBPACK_IMPORTED_MODULE_2__.default,
-    ProcessedJobs: _components_svg_ProcessedJobs_vue__WEBPACK_IMPORTED_MODULE_3__.default,
-    FailedJobs: _components_svg_FailedJobs_vue__WEBPACK_IMPORTED_MODULE_4__.default
+    Logo: _components_svg_Logo_vue__WEBPACK_IMPORTED_MODULE_3__.default,
+    TotalJobs: _components_svg_TotalJobs_vue__WEBPACK_IMPORTED_MODULE_4__.default,
+    ProcessedJobs: _components_svg_ProcessedJobs_vue__WEBPACK_IMPORTED_MODULE_5__.default,
+    FailedJobs: _components_svg_FailedJobs_vue__WEBPACK_IMPORTED_MODULE_6__.default
   },
   data: function data() {
     return {
-      total_jobs: 300,
-      processed_jobs: 257,
-      failed_jobs: 43,
-      jobs: [{
-        id: 1,
-        uuid: '4e7ef713-312e-4d11-9665-4fa1eaf5b7b0',
-        status: 'processed',
-        name: 'App/Jobs/SendEmail',
-        created_at: '16 Dec 21\' 13:02',
-        updated_at: '16 Dec 21\' 13:02'
-      }, {
-        id: 2,
-        uuid: '4e7ef713-312e-4d11-9665-4fa1eaf5b7b0',
-        status: 'pending',
-        name: 'App/Jobs/InnerFolder/HelloWorld',
-        created_at: '16 Dec 21\' 13:02',
-        updated_at: '16 Dec 21\' 13:02'
-      }]
+      total_jobs: 0,
+      processed_jobs: 0,
+      failed_jobs: 0,
+      jobs: [],
+      jobs_fetched: false,
+      event_source: null,
+      sse_not_supported: typeof EventSource === 'undefined',
+      sse_not_supported_msg: "Server-Sent events not supported on this browser.\n        Please use the refresh button to update log."
     };
   },
-  mounted: function mounted() {
-    new _glidejs_glide__WEBPACK_IMPORTED_MODULE_0__.default('#metrics-section', {
-      // type: 'carousel',
-      perView: 0,
-      breakpoints: {
-        767.9: {
-          perView: 1.2
-        }
+  computed: {//
+  },
+  methods: {
+    /**
+     * Fetch previous job logs.
+     */
+    fetchJobs: function fetchJobs() {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return _http__WEBPACK_IMPORTED_MODULE_1__.api.get('logs').then(function (_ref) {
+                  var data = _ref.data;
+                  return data;
+                });
+
+              case 2:
+                return _context.abrupt("return", _context.sent);
+
+              case 3:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+
+    /**
+     * Update the component with previous job logs.
+     */
+    fetchAndUpdateJobs: function fetchAndUpdateJobs() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _this.fetchJobs();
+
+              case 2:
+                res = _context2.sent;
+                _this.jobs = res.logs;
+                _this.total_jobs = res.meta.total_jobs_count;
+                _this.processed_jobs = res.meta.processed_jobs_count;
+                _this.failed_jobs = res.meta.failed_jobs_count;
+
+                if (_this.jobs_fetched === false) {
+                  _this.jobs_fetched = true;
+                }
+
+              case 8:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+
+    /**
+     * Adds the given job data to the top of the job log.
+     */
+    addToJobLogs: function addToJobLogs(job) {
+      var old_job = this.findJob(job.id);
+
+      if (old_job) {
+        this.deleteJob(old_job.id);
       }
-    }).mount();
-    var terminal = this.$refs.terminal;
-    terminal.scrollTo(0, terminal.scrollHeight);
+
+      this.jobs.unshift(job);
+    },
+
+    /**
+     * Find job by id.
+     */
+    findJob: function findJob(id) {
+      return this.jobs.find(function (job) {
+        return job.id == id;
+      });
+    },
+
+    /**
+     * Remove a job from the log.
+     */
+    deleteJob: function deleteJob(id) {
+      var index = this.jobs.findIndex(function (job) {
+        return job.id == id;
+      });
+
+      if (index < 0) {
+        return false;
+      }
+
+      this.jobs.splice(index, 1);
+      return true;
+    },
+
+    /**
+     * listen for new jobs
+     */
+    startLogStream: function startLogStream() {
+      var _this2 = this;
+
+      if (this.sse_not_supported === true) {
+        return console.error(this.sse_not_supported_msg);
+      }
+
+      var baseUrl = _http__WEBPACK_IMPORTED_MODULE_1__.api.defaults.baseURL;
+      var source = new EventSource(baseUrl + 'logs/stream');
+
+      source.onmessage = function (event) {
+        var data = JSON.parse(event.data);
+        _this2.total_jobs = data.meta.total_jobs_count;
+        _this2.processed_jobs = data.meta.processed_jobs_count;
+        _this2.failed_jobs = data.meta.failed_jobs_count;
+        var logs = data.logs; // we want to push from the oldest
+        // that's why we are reversing.
+
+        logs.reverse();
+        logs.forEach(function (job) {
+          return _this2.addToJobLogs(job);
+        });
+      };
+
+      this.event_source = source;
+    },
+
+    /**
+     * Close the open stream
+     */
+    endLogStream: function endLogStream() {
+      if (null == this.event_source) {
+        return console.warn('No open stream.');
+      }
+
+      this.event_source.close();
+    }
+  },
+  mounted: function mounted() {
+    var _this3 = this;
+
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+      var terminal;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              new _glidejs_glide__WEBPACK_IMPORTED_MODULE_2__.default('#metrics-section', {
+                // type: 'carousel',
+                perView: 0,
+                breakpoints: {
+                  767.9: {
+                    perView: 1.2
+                  }
+                }
+              }).mount();
+              terminal = _this3.$refs.terminal;
+              terminal.scrollTo(0, terminal.scrollHeight);
+              _context3.next = 5;
+              return _this3.fetchAndUpdateJobs();
+
+            case 5:
+              // this.startLogStream();
+              window.addEventListener('beforeunload', function (e) {
+                _this3.endLogStream();
+              });
+
+            case 6:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }))();
   }
 });
 
@@ -383,10 +557,20 @@ var api = http.create({
 api.interceptors.response.use(function (res) {
   return res;
 }, function (error) {
-  if (error.response && error.response.status === 401) {
-    window.localStorage.removeItem('authClient');
-    location.href = '';
+  if (!error.response) {
+    // request never made it to the server
+    return Promise.reject(error);
   }
+
+  var status_code = error.response.status;
+
+  if (status_code === 401) {
+    window.localStorage.removeItem('authClient');
+    location.href = ''; // @todo popup login modal instead
+  } else if (status_code === 422) {// handle form error
+  } else if (status_code >= 400 && status_code < 500) {// client errors
+  } else {// server error
+    }
 
   return Promise.reject(error);
 });

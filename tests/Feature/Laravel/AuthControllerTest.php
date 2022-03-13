@@ -15,6 +15,7 @@ class AuthControllerTest extends LaravelTestCase
         $res = $this->post(route('job-watcher.api.login'), [
             'username' => 'root',
             'password' => 'password',
+            'remember' => true,
         ]);
 
         $res->assertSuccessful()
