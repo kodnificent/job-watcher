@@ -19,12 +19,12 @@ class CreateJobWatcherLogsTable extends Migration
             $table->string('name');
             $table->string('connection');
             $table->string('queue');
-            $table->json('payload');
-            $table->json('unserialized_data');
+            $table->longText('payload');
+            $table->longText('unserialized_data');
             $table->unsignedSmallInteger('max_attempts')->nullable();
             $table->unsignedSmallInteger('attempts');
             $table->longText('exception')->nullable();
-            $table->enum('status', ['processing', 'processed', 'failed']);
+            $table->string('status');
             $table->timestamps();
         });
     }

@@ -153,6 +153,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -348,12 +353,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               return _this3.fetchAndUpdateJobs();
 
             case 5:
-              // this.startLogStream();
+              _this3.startLogStream();
+
               window.addEventListener('beforeunload', function (e) {
                 _this3.endLogStream();
               });
 
-            case 6:
+            case 7:
             case "end":
               return _context3.stop();
           }
@@ -1548,9 +1554,56 @@ var render = function() {
                         )
                       ]),
                       _vm._v(" "),
-                      _c("span", { staticClass: "job__time" }, [
-                        _vm._v(_vm._s(job.updated_at))
-                      ])
+                      _c(
+                        "span",
+                        {
+                          staticClass: "job__time",
+                          attrs: { title: "start date" }
+                        },
+                        [
+                          _vm._v(
+                            _vm._s(
+                              new Date(job.created_at).toLocaleDateString()
+                            )
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "job__time",
+                          attrs: { title: "start time" }
+                        },
+                        [
+                          _vm._v(
+                            _vm._s(
+                              new Date(job.created_at).toLocaleTimeString()
+                            )
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "job__time",
+                          attrs: { title: "end time" }
+                        },
+                        [
+                          job.updated_at
+                            ? _c("span", [
+                                _vm._v(
+                                  _vm._s(
+                                    new Date(
+                                      job.updated_at
+                                    ).toLocaleTimeString()
+                                  )
+                                )
+                              ])
+                            : _c("span", [_vm._v(" --- ")])
+                        ]
+                      )
                     ]
                   )
                 }),

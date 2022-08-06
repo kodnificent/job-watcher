@@ -20,8 +20,8 @@ class LogResource extends JsonResource
             'attempts' => $this->attempts,
             'exception' => $this->exception,
             'status' => $this->status,
-            'created_at' => $this->created_at->format('j M y\' H:i:s'),
-            'updated_at' => $this->updated_at->format('j M y\' H:i:s'),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

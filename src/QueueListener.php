@@ -50,6 +50,8 @@ class QueueListener
                 'unserialized_data' => $this->getUnserializedData(),
                 'exception' => $this->event->exception ?? null,
                 'status' => $this->getEventStatus(),
+                'updated_at' => !JobWatcherLog::where(['uuid' => $this->event->job->uuid()])
+                    ->exists() ? null : now(),
             ]
         );
     }

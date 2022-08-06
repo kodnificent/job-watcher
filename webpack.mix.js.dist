@@ -19,10 +19,4 @@ mix.js('resources/js/app.js', 'js')
   .version()
   .setPublicPath('public/vendor/job-watcher')
   .extract()
-  .disableSuccessNotifications()
-  .after(function () {
-    // const dest = 'laravel/public/vendor/job-watcher';
-    // fs.copy('public/vendor/job-watcher', dest)
-    //   .then(() => console.log(`public folder successfully copied to ${dest}`))
-    //   .catch((err) => console.error(`Failed to copy public folder to laravel app. Err: ${err}`));
-  });
+  // .disableSuccessNotifications()

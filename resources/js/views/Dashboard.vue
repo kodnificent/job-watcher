@@ -42,7 +42,12 @@
               <button class="job__name">
                 {{job.name}}
               </button>
-              <span class="job__time">{{job.updated_at}}</span>
+              <span class="job__time" title="start date">{{new Date(job.created_at).toLocaleDateString()}}</span>
+              <span class="job__time" title="start time">{{new Date(job.created_at).toLocaleTimeString()}}</span>
+              <span class="job__time" title="end time">
+                <span v-if="job.updated_at">{{new Date(job.updated_at).toLocaleTimeString()}}</span>
+                <span v-else> --- </span>
+              </span>
             </li>
           </ul>
         </div>
@@ -161,6 +166,7 @@ export default {
   },
 
   methods: {
+
     /**
      * Fetch previous job logs.
      */
@@ -273,7 +279,7 @@ export default {
     terminal.scrollTo(0, terminal.scrollHeight);
 
     await this.fetchAndUpdateJobs();
-    // this.startLogStream();
+    this.startLogStream();
     window.addEventListener('beforeunload', (e) => {
       this.endLogStream();
     });
