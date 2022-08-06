@@ -4,16 +4,16 @@ namespace Kodnificent\JobWatcher\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use Kodnificent\JobWatcher\Models\JobWatcherLog;
+use Kodnificent\JobWatcher\Models\JobModel;
 
-class JobWatcherLogFactory extends Factory
+class JobModelFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = JobWatcherLog::class;
+    protected $model = JobModel::class;
 
     /**
      * Define the model's default state.

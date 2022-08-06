@@ -2,30 +2,27 @@
 
 namespace Kodnificent\JobWatcher\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Validator;
-use Kodnificent\JobWatcher\Http\Resources\LogResource;
-use Kodnificent\JobWatcher\Models\JobWatcherLog;
-use Kodnificent\JobWatcher\QueueListener;
+use Kodnificent\JobWatcher\Http\Resources\JobEventResource;
+use Kodnificent\JobWatcher\Models\JobEventModel;
+use Kodnificent\JobWatcher\Models\JobModel;
 
-class LogController extends Controller
+class JobEventController extends Controller
 {
     public function stream(Request $request)
     {
-        $log_time = Carbon::now();
-        return Response::stream(function () use (&$log_time) {
+        $event_time = Carbon::now();
+        return Response::stream(function () use (&$event_time) {
             while (true) {
                 echo ": checking for new logs\n";
 
-                if ( count($logs = $this->latestLogs($log_time)) > 0 ) {
-                    $enc_data = json_encode($this->logsResponse($logs));
-                    echo "data: $enc_data", "\n\n";
+                if ( count($events = $this->newEvents($event_time)) > 0 ) {
+                    $data = json_encode($this->eventsResponse($events));
+                    echo "data: $data", "\n\n";
                 }
 
                 // flush the output buffer and send echoed messages to the browser
@@ -42,47 +39,41 @@ class LogController extends Controller
 
         }, 200, [
             'Content-Type' => 'text/event-stream',
-            'Cache-Control' => 'no-cache'
+            'Cache-Control' => 'no-cache',
+            'X-Accel-Buffering' => 'no',
         ]);
     }
 
-    public function latestLogs(&$log_time) {
-        $logs = JobWatcherLog::where('created_at', '>=', $log_time)
-            ->orWhere('updated_at', '>=', $log_time)
-            ->orderBy('updated_at', 'desc')
-            ->orderBy('created_at', 'desc')
+    public function newEvents(&$event_time)
+    {
+        $events = JobEventModel::where('created_at', '>', $event_time)
             ->orderBy('id', 'desc')
             ->get();
 
-        $log_time = Carbon::now();
+        if ($events->count() > 0) {
+            $event_time = $events[0]['created_at'];
+        }
 
-        return $logs;
+        return $events;
     }
 
-    public function logsResponse($logs)
+    public function eventsResponse($events)
     {
-        $resource = LogResource::collection($logs);
-        $data = [
-            'logs' => $resource,
+        return [
+            'data' => JobEventResource::collection($events),
             'meta' => [
-                'total_jobs_count' => JobWatcherLog::count(),
-                'processed_jobs_count' => JobWatcherLog::whereStatus('processed')->count(),
-                'failed_jobs_count' => JobWatcherLog::whereStatus('failed')->count(),
-            ],
+                'total_jobs_count' => JobModel::count(),
+                'processed_jobs_count' => JobModel::whereStatus('processed')->count(),
+                'failed_jobs_count' => JobModel::whereStatus('failed')->count(),
+            ]
         ];
-
-        return $data;
     }
 
     public function index(Request $request): JsonResponse
     {
-        /** @var \Illuminate\Pagination\Paginator $logs */
-        $logs = JobWatcherLog::orderBy('updated_at', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->orderBy('id', 'desc')
-            ->get();
+        $events = JobEventModel::orderBy('id', 'desc')->get();
 
-        return new JsonResponse($this->logsResponse($logs));
+        return new JsonResponse($this->eventsResponse($events));
     }
 
     public function retry(Request $request, string $uuid): JsonResponse

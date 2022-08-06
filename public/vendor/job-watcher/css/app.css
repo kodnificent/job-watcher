@@ -188825,16 +188825,6 @@ body {
   margin-left: 1rem;
   text-align: left;
 }
-@media (min-width: 768px) {
-.terminal .job-list .job__name {
-    width: 300px;
-}
-}
-@media (min-width: 1024px) {
-.terminal .job-list .job__name {
-    width: 370px;
-}
-}
 .terminal .job-list .job__time {
   color: #e5e5e5;
   display: none;
@@ -188849,13 +188839,14 @@ body {
 .terminal .job-list .job:not(:first-child) {
   margin-top: 0.5rem;
 }
-.terminal .job-list .job[data-status=processed] .job__name {
+.terminal .job-list .job[data-status=processed] .job__status {
   color: #28BF25;
 }
-.terminal .job-list .job[data-status=processing] .job__name {
-  opacity: 0.2;
+.terminal .job-list .job[data-status=processing] .job__status {
   --tw-text-opacity: 1;
   color: rgba(252, 211, 77, var(--tw-text-opacity));
+}
+.terminal .job-list .job[data-status=processing].job[data-latest=true] .job__status {
   -webkit-animation-name: pending;
           animation-name: pending;
   -webkit-animation-duration: 1.3s;
@@ -188863,7 +188854,7 @@ body {
   -webkit-animation-iteration-count: infinite;
           animation-iteration-count: infinite;
 }
-.terminal .job-list .job[data-status=failed] .job__name {
+.terminal .job-list .job[data-status=failed] .job__status {
   color: #ff0000;
 }
 @-webkit-keyframes pending {

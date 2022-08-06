@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateJobWatcherLogsTable extends Migration
+class CreateJobWatcherJobsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateJobWatcherLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('job_watcher_logs', function (Blueprint $table) {
+        Schema::create('job_watcher_jobs', function (Blueprint $table) {
             $table->id();
             $table->string('uuid');
             $table->string('name');
@@ -36,6 +36,6 @@ class CreateJobWatcherLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('job_watcher_logs');
+        Schema::dropIfExists('job_watcher_jobs');
     }
 }

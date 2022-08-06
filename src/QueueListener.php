@@ -2,13 +2,14 @@
 
 namespace Kodnificent\JobWatcher;
 
-use Illuminate\Contracts\Queue\Job;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Kodnificent\JobWatcher\Exceptions\JobWatcherException;
-use Kodnificent\JobWatcher\Models\JobWatcherLog;
+use Kodnificent\JobWatcher\Models\JobModel;
+use Kodnificent\JobWatcher\Models\JobEventModel;
 
 class QueueListener
 {
@@ -37,23 +38,29 @@ class QueueListener
 
     public function listen(): void
     {
-        JobWatcherLog::updateOrCreate(
-            ['uuid' => $this->event->job->uuid()],
-            [
-                'max_attempts' => $this->event->job->maxTries(),
-                'attempts' => $this->event->job->attempts(),
-                'uuid' => $this->event->job->uuid(),
-                'name' => $this->event->job->resolveName(),
-                'connection' => $this->event->connectionName,
-                'queue' => $this->event->job->getQueue(),
-                'payload' => $this->event->job->payload(),
-                'unserialized_data' => $this->getUnserializedData(),
-                'exception' => $this->event->exception ?? null,
-                'status' => $this->getEventStatus(),
-                'updated_at' => !JobWatcherLog::where(['uuid' => $this->event->job->uuid()])
-                    ->exists() ? null : now(),
-            ]
-        );
+        DB::transaction(function () {
+            $status = $this->getEventStatus();
+            $job_model = JobModel::updateOrCreate(
+                ['uuid' => $this->event->job->uuid()],
+                [
+                    'max_attempts' => $this->event->job->maxTries(),
+                    'attempts' => $this->event->job->attempts(),
+                    'uuid' => $this->event->job->uuid(),
+                    'name' => $this->event->job->resolveName(),
+                    'connection' => $this->event->connectionName,
+                    'queue' => $this->event->job->getQueue(),
+                    'payload' => $this->event->job->payload(),
+                    'unserialized_data' => $this->getUnserializedData(),
+                    'exception' => $this->event->exception ?? null,
+                    'status' => $status,
+                ]
+            );
+
+            JobEventModel::create([
+                'job_id' => $job_model->id,
+                'status' => $status
+            ]);
+        });
     }
 
     public function getEventStatus(): string

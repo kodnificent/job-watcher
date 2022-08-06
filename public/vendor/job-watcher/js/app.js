@@ -13,12 +13,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/http */ "./resources/js/http.js");
-/* harmony import */ var _glidejs_glide__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @glidejs/glide */ "./node_modules/@glidejs/glide/dist/glide.esm.js");
-/* harmony import */ var _components_svg_Logo_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/components/svg/Logo.vue */ "./resources/js/components/svg/Logo.vue");
+/* harmony import */ var _components_svg_FailedJobs_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/components/svg/FailedJobs.vue */ "./resources/js/components/svg/FailedJobs.vue");
+/* harmony import */ var _components_svg_Logo_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/components/svg/Logo.vue */ "./resources/js/components/svg/Logo.vue");
+/* harmony import */ var _components_svg_ProcessedJobs_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/components/svg/ProcessedJobs.vue */ "./resources/js/components/svg/ProcessedJobs.vue");
 /* harmony import */ var _components_svg_TotalJobs_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/components/svg/TotalJobs.vue */ "./resources/js/components/svg/TotalJobs.vue");
-/* harmony import */ var _components_svg_ProcessedJobs_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/components/svg/ProcessedJobs.vue */ "./resources/js/components/svg/ProcessedJobs.vue");
-/* harmony import */ var _components_svg_FailedJobs_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/components/svg/FailedJobs.vue */ "./resources/js/components/svg/FailedJobs.vue");
+/* harmony import */ var _http__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/http */ "./resources/js/http.js");
+/* harmony import */ var _glidejs_glide__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @glidejs/glide */ "./node_modules/@glidejs/glide/dist/glide.esm.js");
 /* harmony import */ var _glidejs_glide_dist_css_glide_core_css__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @glidejs/glide/dist/css/glide.core.css */ "./node_modules/@glidejs/glide/dist/css/glide.core.css");
 /* harmony import */ var _glidejs_glide_dist_css_glide_theme_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @glidejs/glide/dist/css/glide.theme.css */ "./node_modules/@glidejs/glide/dist/css/glide.theme.css");
 
@@ -27,6 +27,10 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
+//
 //
 //
 //
@@ -168,28 +172,38 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    Logo: _components_svg_Logo_vue__WEBPACK_IMPORTED_MODULE_3__.default,
+    Logo: _components_svg_Logo_vue__WEBPACK_IMPORTED_MODULE_2__.default,
     TotalJobs: _components_svg_TotalJobs_vue__WEBPACK_IMPORTED_MODULE_4__.default,
-    ProcessedJobs: _components_svg_ProcessedJobs_vue__WEBPACK_IMPORTED_MODULE_5__.default,
-    FailedJobs: _components_svg_FailedJobs_vue__WEBPACK_IMPORTED_MODULE_6__.default
+    ProcessedJobs: _components_svg_ProcessedJobs_vue__WEBPACK_IMPORTED_MODULE_3__.default,
+    FailedJobs: _components_svg_FailedJobs_vue__WEBPACK_IMPORTED_MODULE_1__.default
   },
   data: function data() {
     return {
       total_jobs: 0,
       processed_jobs: 0,
       failed_jobs: 0,
-      jobs: [],
+      job_events: [],
       jobs_fetched: false,
       event_source: null,
       sse_not_supported: typeof EventSource === 'undefined',
-      sse_not_supported_msg: "Server-Sent events not supported on this browser.\n        Please use the refresh button to update log."
+      sse_not_supported_msg: "Server-Sent events not supported on this browser.\n        Please use the refresh button to update events."
     };
   },
   computed: {//
   },
   methods: {
+    parseDate: function parseDate(date) {
+      console.log(date);
+      var d = new Date(date);
+      var year = d.getFullYear();
+      var month = d.getMonth().toString().padStart(2, '0');
+      var day = d.getDate().toString().padStart(2, '0');
+      var time = d.toLocaleTimeString();
+      return "".concat(year, "-").concat(month, "-").concat(day, " ").concat(time);
+    },
+
     /**
-     * Fetch previous job logs.
+     * Fetch previous job events.
      */
     fetchJobs: function fetchJobs() {
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
@@ -198,7 +212,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return _http__WEBPACK_IMPORTED_MODULE_1__.api.get('logs').then(function (_ref) {
+                return _http__WEBPACK_IMPORTED_MODULE_5__.api.get('job-events').then(function (_ref) {
                   var data = _ref.data;
                   return data;
                 });
@@ -216,7 +230,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
 
     /**
-     * Update the component with previous job logs.
+     * Update the component with previous job events.
      */
     fetchAndUpdateJobs: function fetchAndUpdateJobs() {
       var _this = this;
@@ -232,7 +246,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 2:
                 res = _context2.sent;
-                _this.jobs = res.logs;
+                _this.job_events = res.data;
                 _this.total_jobs = res.meta.total_jobs_count;
                 _this.processed_jobs = res.meta.processed_jobs_count;
                 _this.failed_jobs = res.meta.failed_jobs_count;
@@ -251,32 +265,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
 
     /**
-     * Adds the given job data to the top of the job log.
+     * Adds the given job data to the top of the job events.
      */
     addToJobLogs: function addToJobLogs(job) {
-      var old_job = this.findJob(job.id);
-
-      if (old_job) {
-        this.deleteJob(old_job.id);
-      }
-
-      this.jobs.unshift(job);
+      this.job_events.unshift(job);
     },
 
     /**
      * Find job by id.
      */
     findJob: function findJob(id) {
-      return this.jobs.find(function (job) {
+      return this.job_events.find(function (job) {
         return job.id == id;
       });
     },
 
     /**
-     * Remove a job from the log.
+     * Remove a job from the list.
      */
     deleteJob: function deleteJob(id) {
-      var index = this.jobs.findIndex(function (job) {
+      var index = this.job_events.findIndex(function (job) {
         return job.id == id;
       });
 
@@ -284,7 +292,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         return false;
       }
 
-      this.jobs.splice(index, 1);
+      this.job_events.splice(index, 1);
       return true;
     },
 
@@ -298,19 +306,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         return console.error(this.sse_not_supported_msg);
       }
 
-      var baseUrl = _http__WEBPACK_IMPORTED_MODULE_1__.api.defaults.baseURL;
-      var source = new EventSource(baseUrl + 'logs/stream');
+      var baseUrl = _http__WEBPACK_IMPORTED_MODULE_5__.api.defaults.baseURL;
+      var source = new EventSource(baseUrl + 'job-events/stream');
 
       source.onmessage = function (event) {
         var data = JSON.parse(event.data);
         _this2.total_jobs = data.meta.total_jobs_count;
         _this2.processed_jobs = data.meta.processed_jobs_count;
         _this2.failed_jobs = data.meta.failed_jobs_count;
-        var logs = data.logs; // we want to push from the oldest
+        var events = data.data; // we want to push from the oldest
         // that's why we are reversing.
 
-        logs.reverse();
-        logs.forEach(function (job) {
+        events.reverse();
+        events.forEach(function (job) {
           return _this2.addToJobLogs(job);
         });
       };
@@ -338,7 +346,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              new _glidejs_glide__WEBPACK_IMPORTED_MODULE_2__.default('#metrics-section', {
+              new _glidejs_glide__WEBPACK_IMPORTED_MODULE_6__.default('#metrics-section', {
                 // type: 'carousel',
                 perView: 0,
                 breakpoints: {
@@ -1533,77 +1541,43 @@ var render = function() {
                   staticClass: "job-list",
                   attrs: { "aria-live": "assertive" }
                 },
-                _vm._l(_vm.jobs, function(job) {
+                _vm._l(_vm.job_events, function(event, i) {
                   return _c(
                     "li",
                     {
-                      key: job.id,
+                      key: event.id,
                       staticClass: "job",
-                      attrs: { "data-status": job.status }
+                      attrs: {
+                        "data-status": event.status,
+                        "data-latest": i == 0
+                      }
                     },
                     [
-                      _c("span", { staticClass: "job__id" }, [
-                        _vm._v("#" + _vm._s(job.uuid) + ":")
-                      ]),
-                      _vm._v(" "),
-                      _c("button", { staticClass: "job__name" }, [
+                      _c("div", { staticClass: "job__status" }, [
                         _vm._v(
-                          "\n              " +
-                            _vm._s(job.name) +
+                          "\n              [" +
+                            _vm._s(event.job.id) +
+                            "] " +
+                            _vm._s(event.status) +
                             "\n            "
                         )
                       ]),
                       _vm._v(" "),
-                      _c(
-                        "span",
-                        {
-                          staticClass: "job__time",
-                          attrs: { title: "start date" }
-                        },
-                        [
-                          _vm._v(
-                            _vm._s(
-                              new Date(job.created_at).toLocaleDateString()
-                            )
-                          )
-                        ]
-                      ),
+                      _c("a", { staticClass: "job__name" }, [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(event.job.name) +
+                            "\n            "
+                        )
+                      ]),
                       _vm._v(" "),
-                      _c(
-                        "span",
-                        {
-                          staticClass: "job__time",
-                          attrs: { title: "start time" }
-                        },
-                        [
-                          _vm._v(
-                            _vm._s(
-                              new Date(job.created_at).toLocaleTimeString()
-                            )
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "span",
-                        {
-                          staticClass: "job__time",
-                          attrs: { title: "end time" }
-                        },
-                        [
-                          job.updated_at
-                            ? _c("span", [
-                                _vm._v(
-                                  _vm._s(
-                                    new Date(
-                                      job.updated_at
-                                    ).toLocaleTimeString()
-                                  )
-                                )
-                              ])
-                            : _c("span", [_vm._v(" --- ")])
-                        ]
-                      )
+                      _c("time", [
+                        _vm._v(
+                          "\n              [" +
+                            _vm._s(_vm.parseDate(event.created_at)) +
+                            "]\n            "
+                        )
+                      ])
                     ]
                   )
                 }),

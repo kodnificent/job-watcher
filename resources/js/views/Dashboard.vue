@@ -37,17 +37,23 @@
         <h1 class="text-xl font-bold uppercase">Log Terminal</h1>
         <div class="terminal" ref="terminal">
           <ul class="job-list" aria-live="assertive">
-            <li class="job" :data-status="job.status" v-for="job in jobs" v-bind:key="job.id">
-              <span class="job__id">#{{job.uuid}}:</span>
-              <button class="job__name">
-                {{job.name}}
-              </button>
-              <span class="job__time" title="start date">{{new Date(job.created_at).toLocaleDateString()}}</span>
-              <span class="job__time" title="start time">{{new Date(job.created_at).toLocaleTimeString()}}</span>
-              <span class="job__time" title="end time">
-                <span v-if="job.updated_at">{{new Date(job.updated_at).toLocaleTimeString()}}</span>
-                <span v-else> --- </span>
-              </span>
+            <li
+              class="job"
+              :data-status="event.status"
+              :data-latest="i == 0"
+              v-for="event, i in job_events"
+              v-bind:key="event.id">
+
+              <div class="job__status">
+                [{{event.job.id}}] {{ event.status }}
+              </div>
+              <a class="job__name">
+                {{ event.job.name }}
+              </a>
+              <time>
+                [{{ parseDate(event.created_at) }}]
+              </time>
+
             </li>
           </ul>
         </div>
@@ -97,10 +103,6 @@ body
         @apply truncate lg:max-w-full hidden md:block
       &__name
         @apply font-bold ml-4 text-left
-        @screen md
-          width: 300px
-        @screen lg
-          width: 370px
       &__time
         color: #e5e5e5
         @apply ml-4 opacity-70 hidden md:inline
@@ -108,16 +110,18 @@ body
       &:not(:first-child)
         @apply mt-2
 
-    .job[data-status="processed"] .job__name
+    .job[data-status="processed"] .job__status
       color: #28BF25
 
-    .job[data-status="processing"] .job__name
-      @apply text-yellow-300 opacity-20
+    .job[data-status="processing"] .job__status
+      @apply text-yellow-300
+
+    .job[data-status="processing"].job[data-latest="true"] .job__status
       animation-name: pending
       animation-duration: 1.3s
       animation-iteration-count: infinite
 
-    .job[data-status="failed"] .job__name
+    .job[data-status="failed"] .job__status
       color: #ff0000
 
 @keyframes pending
@@ -130,12 +134,12 @@ body
 </style>
 
 <script>
+import FailedJobs from '@/components/svg/FailedJobs.vue';
+import Logo from '@/components/svg/Logo.vue';
+import ProcessedJobs from '@/components/svg/ProcessedJobs.vue';
+import TotalJobs from '@/components/svg/TotalJobs.vue';
 import { api } from '@/http';
 import Glide from '@glidejs/glide';
-import Logo from '@/components/svg/Logo.vue';
-import TotalJobs from '@/components/svg/TotalJobs.vue';
-import ProcessedJobs from '@/components/svg/ProcessedJobs.vue';
-import FailedJobs from '@/components/svg/FailedJobs.vue';
 import '@glidejs/glide/dist/css/glide.core.css';
 import '@glidejs/glide/dist/css/glide.theme.css';
 
@@ -152,12 +156,12 @@ export default {
       total_jobs: 0,
       processed_jobs: 0,
       failed_jobs: 0,
-      jobs: [],
+      job_events: [],
       jobs_fetched: false,
       event_source: null,
       sse_not_supported: typeof(EventSource) === 'undefined',
       sse_not_supported_msg: `Server-Sent events not supported on this browser.
-        Please use the refresh button to update log.`
+        Please use the refresh button to update events.`
     };
   },
 
@@ -167,21 +171,32 @@ export default {
 
   methods: {
 
+    parseDate(date) {
+      console.log(date)
+      let d = new Date(date)
+      let year = d.getFullYear()
+      let month = d.getMonth().toString().padStart(2, '0')
+      let day = d.getDate().toString().padStart(2, '0')
+      let time = d.toLocaleTimeString()
+
+      return `${year}-${month}-${day} ${time}`
+    },
+
     /**
-     * Fetch previous job logs.
+     * Fetch previous job events.
      */
     async fetchJobs() {
-      return await api.get('logs').then(({ data }) => {
+      return await api.get('job-events').then(({ data }) => {
         return data;
       });
     },
 
     /**
-     * Update the component with previous job logs.
+     * Update the component with previous job events.
      */
     async fetchAndUpdateJobs() {
       const res = await this.fetchJobs();
-      this.jobs = res.logs;
+      this.job_events = res.data;
       this.total_jobs = res.meta.total_jobs_count;
       this.processed_jobs = res.meta.processed_jobs_count;
       this.failed_jobs = res.meta.failed_jobs_count;
@@ -192,36 +207,30 @@ export default {
     },
 
     /**
-     * Adds the given job data to the top of the job log.
+     * Adds the given job data to the top of the job events.
      */
     addToJobLogs(job) {
-      const old_job = this.findJob(job.id);
-
-      if (old_job) {
-        this.deleteJob(old_job.id);
-      }
-
-      this.jobs.unshift(job);
+      this.job_events.unshift(job);
     },
 
     /**
      * Find job by id.
      */
     findJob(id) {
-      return this.jobs.find((job) => job.id == id);
+      return this.job_events.find((job) => job.id == id);
     },
 
     /**
-     * Remove a job from the log.
+     * Remove a job from the list.
      */
     deleteJob(id) {
-      const index = this.jobs.findIndex((job) => job.id == id);
+      const index = this.job_events.findIndex((job) => job.id == id);
 
       if (index < 0) {
         return false;
       }
 
-      this.jobs.splice(index, 1);
+      this.job_events.splice(index, 1);
 
       return true;
     },
@@ -235,7 +244,7 @@ export default {
       }
 
       const baseUrl = api.defaults.baseURL;
-      const source = new EventSource(baseUrl + 'logs/stream');
+      const source = new EventSource(baseUrl + 'job-events/stream');
       source.onmessage = (event) => {
         const data = JSON.parse(event.data);
 
@@ -243,11 +252,11 @@ export default {
         this.processed_jobs = data.meta.processed_jobs_count;
         this.failed_jobs = data.meta.failed_jobs_count;
 
-        const logs = data.logs;
+        const events = data.data;
         // we want to push from the oldest
         // that's why we are reversing.
-        logs.reverse();
-        logs.forEach(job => this.addToJobLogs(job));
+        events.reverse();
+        events.forEach(job => this.addToJobLogs(job));
       };
       this.event_source = source;
     },

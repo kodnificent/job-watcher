@@ -17,12 +17,12 @@ $router->group([
     ]);
 
     $router->group([
-        'prefix' => 'logs',
-        'as' => 'logs',
+        'prefix' => 'job-events',
+        'as' => 'job-events',
     ], function () use ($router) {
-        $router->get('', ['as' => 'index', 'uses' => 'LogController@index']);
-        $router->get('stream', ['as' => 'stream', 'uses' => 'LogController@stream']);
-        $router->post('{uuid}/retry', ['as' => 'retry', 'uses' => 'LogController@retry']);
+        $router->get('', ['as' => 'index', 'uses' => 'JobEventController@index']);
+        $router->get('stream', ['as' => 'stream', 'uses' => 'JobEventController@stream']);
+        $router->post('{uuid}/retry', ['as' => 'retry', 'uses' => 'JobEventController@retry']);
     });
 });
 

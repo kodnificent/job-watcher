@@ -5,24 +5,26 @@ namespace Kodnificent\JobWatcher\Tests\Feature\Laravel;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Facades\Config;
-use Kodnificent\JobWatcher\Models\JobWatcherLog;
+use Kodnificent\JobWatcher\Models\JobEventModel;
+use Kodnificent\JobWatcher\Models\JobModel;
 use Kodnificent\JobWatcher\Tests\LaravelTestCase;
 
-class LogControllerTest extends LaravelTestCase
+class JobEventControllerTest extends LaravelTestCase
 {
     use WithoutMiddleware, DatabaseMigrations;
 
-    public function testUserCan_ViewLogIndex()
+    public function testUserCan_ViewJobEventsIndex()
     {
-        JobWatcherLog::factory()->count(2)->processed()->create();
-        JobWatcherLog::factory()->count(2)->processing()->create();
-        JobWatcherLog::factory()->count(2)->failed()->create();
+        $job = JobModel::factory()->create();
+        JobEventModel::factory()->for($job, 'job')->processed()->create();
+        JobEventModel::factory()->for($job, 'job')->processing()->create();
+        JobEventModel::factory()->for($job, 'job')->failed()->create();
 
-        $url = route('job-watcher.api.logs.index');
+        $url = route('job-watcher.api.job-events.index');
         $res = $this->get($url);
 
         $res->assertSuccessful()
-            ->assertJsonCount(6, 'logs');
+            ->assertJsonCount(3, 'data');
     }
 
     public function testUserCan_RetryFailedJob()
@@ -38,7 +40,7 @@ class LogControllerTest extends LaravelTestCase
         $failer = app('queue.failer');
         $uuid = '10-49-j-34';
         $failer->log('database', 'default', json_encode(['uuid' => $uuid]), 'failed for nothing.');
-        $url = route('job-watcher.api.logs.retry', ['uuid' => $uuid]);
+        $url = route('job-watcher.api.job-events.retry', ['uuid' => $uuid]);
 
         $res = $this->post($url);
         $res->assertSuccessful();

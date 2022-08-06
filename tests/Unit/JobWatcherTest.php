@@ -2,7 +2,7 @@
 
 namespace Kodnificent\JobWatcher\Tests\Unit;
 
-use Kodnificent\JobWatcher\Models\JobWatcherLog;
+use Kodnificent\JobWatcher\Models\JobModel;
 use Kodnificent\JobWatcher\Tests\Jobs\FailedJob;
 use Kodnificent\JobWatcher\Tests\Jobs\ProcessedJob;
 use Kodnificent\JobWatcher\Tests\LumenTestCase;

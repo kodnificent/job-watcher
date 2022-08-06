@@ -8,12 +8,12 @@ Route::name('api.')
         Route::post('login', 'AuthController@login')->name('login');
         Route::post('logout', 'AuthController@logout')->name('logout');
 
-        Route::name('logs.')
-            ->prefix('logs')
+        Route::name('job-events.')
+            ->prefix('job-events')
             ->group(function () {
-                Route::get('', 'LogController@index')->name('index');
-                Route::get('stream', 'LogController@stream')->name('stream');
-                Route::post('{uuid}/retry', 'LogController@retry')->name('retry');
+                Route::get('', 'JobEventController@index')->name('index');
+                Route::get('stream', 'JobEventController@stream')->name('stream');
+                Route::post('{uuid}/retry', 'JobEventController@retry')->name('retry');
             });
     });
 

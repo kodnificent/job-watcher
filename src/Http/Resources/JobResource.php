@@ -4,7 +4,7 @@ namespace Kodnificent\JobWatcher\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LogResource extends JsonResource
+class JobResource extends JsonResource
 {
     public function toArray($request)
     {

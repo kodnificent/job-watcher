@@ -4,9 +4,9 @@ namespace Kodnificent\JobWatcher\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Kodnificent\JobWatcher\Database\Factories\JobWatcherLogFactory;
+use Kodnificent\JobWatcher\Database\Factories\JobModelFactory;
 
-class JobWatcherLog extends Model
+class JobModel extends Model
 {
     use HasFactory { HasFactory::factory as traitFactory; }
 
@@ -17,13 +17,15 @@ class JobWatcherLog extends Model
 
     protected $guarded = [];
 
-    public static function factory(...$parameters): JobWatcherLogFactory
+    public $table = 'job_watcher_jobs';
+
+    public static function factory(...$parameters): JobModelFactory
     {
         return static::traitFactory($parameters);
     }
 
-    protected static function newFactory(): JobWatcherLogFactory
+    protected static function newFactory(): JobModelFactory
     {
-        return JobWatcherLogFactory::new();
+        return JobModelFactory::new();
     }
 }
